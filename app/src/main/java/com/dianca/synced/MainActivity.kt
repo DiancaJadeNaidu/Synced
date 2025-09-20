@@ -14,7 +14,7 @@ class MainActivity : AppCompatActivity() {
 
         val btnSync: Button = findViewById(R.id.btnSync)
         btnSync.setOnClickListener {
-            val intent = Intent(this, LoginActivity::class.java)
+            val intent = Intent(this, RulesActivity::class.java)
             startActivity(intent)
             finish()
         }
@@ -22,12 +22,12 @@ class MainActivity : AppCompatActivity() {
         val btnAllow: Button = findViewById(R.id.btnAllow)
         val btnNotNow: Button = findViewById(R.id.btnNotNow)
 
-        btnAllow.setOnClickListener { goToLogin() }
-        btnNotNow.setOnClickListener { goToLogin() }
+        btnAllow.setOnClickListener { goToRules() }
+        btnNotNow.setOnClickListener { goToRules() }
     }
 
-    private fun goToLogin() {
-        val intent = Intent(this, LoginActivity::class.java)
+    private fun goToRules() {
+        val intent = Intent(this, RulesActivity::class.java)
         startActivity(intent)
         finish()
     }
