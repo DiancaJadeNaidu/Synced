@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Primary app colors -->
+    <color name="colorPrimary">#2196F3</color>
+    <color name="colorPrimaryDark">#1976D2</color>
+    <color name="colorAccent">#FF4081</color>
+
+    <!-- Text colors -->
+    <color name="textPrimary">#000000</color>
+    <color name="textSecondary">#757575</color>
+    <color name="textLink">#2196F3</color>
+    <color name="blueText">#0025FF</color>
+
+    <!-- Backgrounds -->
+    <color name="backgroundLight">#FFFFFF</color>
+    <color name="backgroundGray">#EEEEEE</color>
+
+    <!-- Status colors -->
+    <color name="statusOnline">#16B400</color>
+    <color name="statusOffline">#FF3D00</color>
+
+    <!-- Game card backgrounds -->
+    <color name="cardTicTacToe">#F3F6FF</color>
+    <color name="cardTrivia">#F3FFF3</color>
+    <color name="cardEmoji">#FFFDE7</color>
+    <color name="cardQuickDraw">#FFF5F5</color>
+
+    <!-- Gradient colors (used in gradient_bg.xml drawable) -->
+    <color name="gradientStart">#00C6FF</color>
+    <color name="gradientEnd">#0072FF</color>
+
+    <color name="red">#FF1000</color>
+    <color name="lightBlue">#6FF2FF</color>
+</resources>

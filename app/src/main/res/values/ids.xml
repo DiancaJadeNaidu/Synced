@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <item name="checkAgree" type="id" />
+    <item name="btnContinue" type="id" />
+    <item name="btnLogin" type="id" />
+    <item name="btnRegister" type="id" />
+    <item name="btnGoogle" type="id" />
+    <item name="btnFacebook" type="id" />
+</resources>

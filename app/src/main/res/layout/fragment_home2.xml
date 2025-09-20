@@ -1,0 +1,103 @@
+
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    tools:context=".HomeFragment">
+
+    <!-- TODO: Update blank fragment layout -->
+    <?xml version="1.0" encoding="utf-8"?>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:gravity="center"
+        android:background="@drawable/gradient_bg"
+        android:padding="20dp">
+
+        <ImageView
+            android:id="@+id/logo"
+            android:layout_width="400dp"
+            android:layout_height="207dp"
+            android:layout_marginBottom="50dp"
+            android:contentDescription="@string/app_name"
+            android:src="@drawable/ic_synced" />
+
+        <TextView
+            android:id="@+id/tagline"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="70dp"
+            android:fontFamily="sans-serif"
+            android:gravity="center"
+            android:text="Connect Hearts, Sync Souls"
+            android:textColor="@android:color/white"
+            android:textSize="30sp" />
+
+        <!-- Let's Sync button -->
+        <Button
+            android:id="@+id/btnSync"
+            style="?attr/materialButtonOutlinedStyle"
+            android:layout_width="346dp"
+            android:layout_height="61dp"
+            android:layout_marginBottom="80dp"
+            android:backgroundTint="@android:color/white"
+            android:paddingLeft="100dp"
+            android:paddingRight="100dp"
+            android:text="Let's Sync! 🚀"
+            android:textColor="#7329FF"
+            android:textSize="17dp"
+            app:cornerRadius="25dp" />
+
+        <!-- Notification permission box -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="144dp"
+            android:layout_marginTop="20dp"
+            android:background="@drawable/rounded_box"
+            android:gravity="center"
+            android:orientation="vertical"
+            android:padding="16dp">
+
+
+            <TextView
+                android:id="@+id/notifyText"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="25dp"
+                android:text="📱 Allow notifications to stay connected?"
+                android:textColor="#FFFFFF"
+                android:textSize="16sp" />
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:orientation="horizontal">
+
+                <Button
+                    android:id="@+id/btnAllow"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="15dp"
+                    android:backgroundTint="#853FFF"
+                    android:text="Allow"
+                    android:textColor="@android:color/white"
+                    app:cornerRadius="25dp" />
+
+                <Button
+                    android:id="@+id/btnNotNow"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:backgroundTint="#A67BFF"
+                    android:text="Not Now"
+                    android:textColor="@android:color/white"
+                    app:cornerRadius="25dp" />
+            </LinearLayout>
+        </LinearLayout>
+
+    </LinearLayout>
+
+</FrameLayout>
