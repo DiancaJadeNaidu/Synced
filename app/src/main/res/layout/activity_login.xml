@@ -3,12 +3,10 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    tools:context=".LoginFragment">
+    xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <!-- TODO: Update blank fragment layout -->
-    <?xml version="1.0" encoding="utf-8"?>
-    <ScrollView
+      <ScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="@drawable/gradient_bg"
@@ -43,11 +41,11 @@
                 <Spinner
                     android:id="@+id/spinnerLanguage"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
+                    android:layout_height="57dp"
                     android:layout_marginBottom="12dp"
                     android:background="@drawable/rounded_input_bg"
                     android:padding="10dp"
-                    app:cornerRadius="25dp"/>
+                    app:cornerRadius="25dp" />
 
                 <!-- Email -->
                 <EditText
@@ -107,19 +105,6 @@
                     android:backgroundTint="#42E070"
                     app:cornerRadius="25dp"
                     android:text="Continue with Google"
-                    android:textSize="16sp"
-                    android:textColor="@android:color/white" />
-
-                <!-- Facebook Button -->
-                <Button
-                    android:id="@+id/btnFacebook"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginBottom="20dp"
-                    android:padding="12dp"
-                    android:backgroundTint="#4898F8"
-                    app:cornerRadius="25dp"
-                    android:text="Continue with Facebook"
                     android:textSize="16sp"
                     android:textColor="@android:color/white" />
 

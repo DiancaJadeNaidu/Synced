@@ -126,15 +126,15 @@
     </ScrollView>
 
     <!-- Bottom Navigation -->
-    <com.google.android.material.bottomnavigation.BottomNavigationView
-        android:id="@+id/nav_view"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_gravity="bottom"
-        app:itemBackground="@android:color/white"
-        app:itemIconTint="@color/selector_nav_item"
-        app:itemTextColor="@color/selector_nav_item"
-        app:labelVisibilityMode="labeled"
-        app:menu="@menu/bottom_nav_menu"/>
+<!--    <com.google.android.material.bottomnavigation.BottomNavigationView-->
+<!--        android:id="@+id/nav_view"-->
+<!--        android:layout_width="match_parent"-->
+<!--        android:layout_height="wrap_content"-->
+<!--        android:layout_gravity="bottom"-->
+<!--        app:itemBackground="@android:color/white"-->
+<!--        app:itemIconTint="@color/selector_nav_item"-->
+<!--        app:itemTextColor="@color/selector_nav_item"-->
+<!--        app:labelVisibilityMode="labeled"-->
+<!--        app:menu="@menu/bottom_nav_menu"/>-->
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

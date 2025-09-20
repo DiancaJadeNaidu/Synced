@@ -165,17 +165,17 @@
         app:layout_constraintEnd_toEndOf="parent">
 
         <!-- Bottom Navigation -->
-        <com.google.android.material.bottomnavigation.BottomNavigationView
-            android:id="@+id/nav_view"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_gravity="bottom"
-            app:menu="@menu/bottom_nav_menu"
-            app:itemIconTint="@color/selector_nav_item"
-            app:itemTextColor="@color/selector_nav_item"
-            app:labelVisibilityMode="labeled"
-            app:itemBackground="@android:color/white"
-            app:layout_constraintBottom_toBottomOf="parent" />
+<!--        <com.google.android.material.bottomnavigation.BottomNavigationView-->
+<!--            android:id="@+id/nav_view"-->
+<!--            android:layout_width="match_parent"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:layout_gravity="bottom"-->
+<!--            app:menu="@menu/bottom_nav_menu"-->
+<!--            app:itemIconTint="@color/selector_nav_item"-->
+<!--            app:itemTextColor="@color/selector_nav_item"-->
+<!--            app:labelVisibilityMode="labeled"-->
+<!--            app:itemBackground="@android:color/white"-->
+<!--            app:layout_constraintBottom_toBottomOf="parent" />-->
 
     </LinearLayout>
 

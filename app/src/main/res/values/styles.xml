@@ -9,5 +9,98 @@
         <item name="android:gravity">center_vertical</item>
 
     </style>
+    <string-array name="zodiac_signs">
+        <item>Aries</item>
+        <item>Taurus</item>
+        <item>Gemini</item>
+        <item>Cancer</item>
+        <item>Leo</item>
+        <item>Virgo</item>
+        <item>Libra</item>
+        <item>Scorpio</item>
+        <item>Sagittarius</item>
+        <item>Capricorn</item>
+        <item>Aquarius</item>
+        <item>Pisces</item>
+    </string-array>
+
+    <string-array name="siblings_options">
+        <item>Only child</item>
+        <item>1 sibling</item>
+        <item>2 siblings</item>
+        <item>3+ siblings</item>
+    </string-array>
+
+    <string-array name="area_options">
+        <!-- Western Cape -->
+        <item>Cape Town</item>
+        <item>Stellenbosch</item>
+        <item>George</item>
+
+        <!-- Gauteng -->
+        <item>Johannesburg</item>
+        <item>Pretoria</item>
+        <item>Soweto</item>
+
+        <!-- KwaZulu-Natal -->
+        <item>Durban</item>
+        <item>Pietermaritzburg</item>
+        <item>Richards Bay</item>
+
+        <!-- Eastern Cape -->
+        <item>Port Elizabeth (Gqeberha)</item>
+        <item>East London</item>
+        <item>Mthatha</item>
+
+        <!-- Free State -->
+        <item>Bloemfontein</item>
+        <item>Welkom</item>
+        <item>Parys</item>
+
+        <!-- North West -->
+        <item>Rustenburg</item>
+        <item>Klerksdorp</item>
+        <item>Mafikeng (Mahikeng)</item>
+
+        <!-- Mpumalanga -->
+        <item>Nelspruit (Mbombela)</item>
+        <item>Witbank (eMalahleni)</item>
+        <item>Secunda</item>
+
+        <!-- Limpopo -->
+        <item>Polokwane</item>
+        <item>Thohoyandou</item>
+        <item>Tzaneen</item>
+
+        <!-- Northern Cape -->
+        <item>Kimberley</item>
+        <item>Upington</item>
+        <item>Springbok</item>
+    </string-array>
+
+    <string-array name="movie_genres">
+        <item>Action</item>
+        <item>Romance</item>
+        <item>Comedy</item>
+        <item>Horror</item>
+        <item>Drama</item>
+        <item>Other</item>
+    </string-array>
+
+    <string-array name="religions">
+        <item>Christian</item>
+        <item>Muslim</item>
+        <item>Hindu</item>
+        <item>Jewish</item>
+        <item>Other</item>
+    </string-array>
+
+    <string-array name="foods">
+        <item>Italian</item>
+        <item>Indian</item>
+        <item>Chinese</item>
+        <item>Mexican</item>
+        <item>Other</item>
+    </string-array>
 
 </resources>

@@ -5,7 +5,18 @@
     <string name="title_notifications">Notifications</string>
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
-
+    <string name="red_color">Red Color</string>
+    <string name="green_color">Green color</string>
+    <string name="yellow_colour">Yellow colour</string>
+    <string name="blue_color">Blue color</string>
+    <string name="purple_color">Purple color</string>
+    <string name="pink_color">Pink color</string>
+    <string name="brown_color">Brown color</string>
+    <string name="dark_green_color">Dark green color</string>
+    <string name="dark_blue_color">Dark blue color</string>
+    <string name="gray_color">Gray color</string>
+    <string name="orange_color">Orange color</string>
+    <string name="other_color">Other</string>
     <string name="join_synced">Join Synced! 🎉</string>
     <string name="choose_avatar">Choose your character avatar:</string>
     <string name="register">Register</string>
@@ -45,5 +56,9 @@
         <item>Afrikaans</item>
         <item>Zulu</item>
     </string-array>
+     <string name="default_web_client_id">
+    134621070266-ahgd1nfjr2qvnkpjfv6sh65cta0o3slu.apps.googleusercontent.com
+</string>
+    <string name="facebook_app_id">123456789012345</string>
 
 </resources>
