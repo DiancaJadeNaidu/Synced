@@ -27,6 +27,8 @@
     <color name="yellow">#FFD700</color> <!-- Emoji yellow -->
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
+    <color name="blue">#0000FF</color>
+    <color name="green">#4CAF50</color>
     <!-- Status colors -->
     <color name="statusOnline">#16B400</color>
     <color name="statusOffline">#FF3D00</color>
@@ -44,4 +46,5 @@
     <color name="red">#FF1000</color>
     <color name="lightBlue">#6FF2FF</color>
     <color name="Button1">#9A61FF</color>
+    <color name="Button2">#00B8E5</color>
 </resources>
