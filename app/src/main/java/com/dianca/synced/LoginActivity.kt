@@ -52,7 +52,7 @@ class LoginActivity : AppCompatActivity() {
             auth.signInWithEmailAndPassword(email, password)
                 .addOnCompleteListener(this) { task ->
                     if (task.isSuccessful) {
-                        navigateToHome()
+                        navigateToQuestionnaire()
                     } else {
                         Toast.makeText(this, "Login failed: ${task.exception?.message}", Toast.LENGTH_SHORT).show()
                     }
@@ -97,7 +97,7 @@ class LoginActivity : AppCompatActivity() {
         auth.signInWithCredential(credential)
             .addOnCompleteListener(this) { task ->
                 if (task.isSuccessful) {
-                    navigateToHome()
+                    navigateToQuestionnaire()
                 } else {
                     Toast.makeText(this, "Google authentication failed", Toast.LENGTH_SHORT).show()
                 }
@@ -113,7 +113,7 @@ class LoginActivity : AppCompatActivity() {
             override fun onAuthenticationSucceeded(result: BiometricPrompt.AuthenticationResult) {
                 super.onAuthenticationSucceeded(result)
                 Toast.makeText(applicationContext, "Biometric auth successful", Toast.LENGTH_SHORT).show()
-                navigateToHome()
+                navigateToQuestionnaire()
             }
 
             override fun onAuthenticationFailed() {
@@ -132,8 +132,8 @@ class LoginActivity : AppCompatActivity() {
         binding.ivFace.setOnClickListener { biometricPrompt.authenticate(promptInfo) }
     }
 
-    private fun navigateToHome() {
-        startActivity(Intent(this, MainActivity::class.java))
+    private fun navigateToQuestionnaire() {
+        startActivity(Intent(this, QuestionnaireActivity::class.java))
         finish()
     }
 }

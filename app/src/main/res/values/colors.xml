@@ -29,6 +29,9 @@
     <color name="white">#FFFFFFFF</color>
     <color name="blue">#0000FF</color>
     <color name="green">#4CAF50</color>
+    <color name="md_red">#80F44336</color>
+    <color name="md_green">#804CAF50</color>
+    <color name="lt_purple">#803F51B5</color>
     <!-- Status colors -->
     <color name="statusOnline">#16B400</color>
     <color name="statusOffline">#FF3D00</color>

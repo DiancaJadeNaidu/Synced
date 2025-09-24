@@ -55,7 +55,9 @@
                     android:layout_marginBottom="12dp"
                     android:background="@drawable/rounded_input_bg"
                     android:hint="Email"
+                    android:textColorHint="#333333"
                     android:inputType="textEmailAddress"
+                    android:textColor="#333333"
                     android:padding="12dp" />
 
                 <!-- Password -->
@@ -66,6 +68,8 @@
                     android:layout_marginBottom="20dp"
                     android:background="@drawable/rounded_input_bg"
                     android:hint="Password"
+                    android:textColorHint="#333333"
+                    android:textColor="#333333"
                     android:inputType="textPassword"
                     android:padding="12dp" />
 

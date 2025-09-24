@@ -16,7 +16,7 @@
         <!-- White rounded card -->
         <LinearLayout
             android:layout_width="384dp"
-            android:layout_height="700dp"
+            android:layout_height="match_parent"
             android:background="@drawable/rounded_white_card"
             android:orientation="vertical"
             android:padding="20dp"
@@ -43,8 +43,11 @@
                 android:autofillHints=""
                 android:background="@drawable/edit_text_bg"
                 android:hint="@string/email"
+
                 android:inputType="textEmailAddress"
                 android:padding="15dp"
+                android:textColor="#333333"
+                android:textColorHint="#333333"
                 app:cornerRadius="25dp" />
 
             <EditText
@@ -53,31 +56,40 @@
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="12dp"
                 android:autofillHints=""
+
                 android:background="@drawable/edit_text_bg"
                 android:hint="@string/password"
                 android:inputType="textPassword"
-                android:padding="15dp" />
+                android:padding="15dp"
+                android:textColor="#333333"
+                android:textColorHint="#333333" />
 
             <EditText
                 android:id="@+id/etConfirmPassword"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="12dp"
+
                 android:autofillHints=""
                 android:background="@drawable/edit_text_bg"
                 android:hint="@string/confirm_password"
                 android:inputType="textPassword"
-                android:padding="15dp" />
+                android:padding="15dp"
+                android:textColor="#333333"
+                android:textColorHint="#333333" />
 
             <EditText
                 android:id="@+id/etName"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="16dp"
+
                 android:autofillHints=""
                 android:background="@drawable/edit_text_bg"
                 android:hint="@string/name"
-                android:padding="15dp" />
+                android:padding="15dp"
+                android:textColor="#333333"
+                android:textColorHint="#333333" />
 
             <TextView
                 android:id="@+id/tvChooseAvatar"
@@ -208,7 +220,6 @@
                 android:text="@string/login_hint"
                 android:textColor="#3653FF"
                 android:textSize="18dp" />
-
 
 
         </LinearLayout>

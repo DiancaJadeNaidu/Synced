@@ -101,7 +101,7 @@ class RegisterActivity : AppCompatActivity() {
                                     "Registration successful",
                                     Toast.LENGTH_SHORT
                                 ).show()
-                                navigateToHome()
+                                navigateToQuestionnaire()
                             }
                             .addOnFailureListener { e ->
                                 Toast.makeText(
@@ -128,8 +128,8 @@ class RegisterActivity : AppCompatActivity() {
         }
     }
 
-    private fun navigateToHome() {
-        startActivity(Intent(this, MainActivity::class.java))
+    private fun navigateToQuestionnaire() {
+        startActivity(Intent(this, QuestionnaireActivity::class.java))
         finish()
     }
 }
