@@ -8,13 +8,14 @@ import androidx.appcompat.app.AppCompatActivity
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.SetOptions
+import java.text.SimpleDateFormat
 import java.util.*
 
 class QuestionnaireActivity : AppCompatActivity() {
 
     private lateinit var auth: FirebaseAuth
     private lateinit var db: FirebaseFirestore
-
+    private lateinit var genderRadioGroup: RadioGroup
     private lateinit var birthdayInput: EditText
     private lateinit var zodiacSpinner: Spinner
     private lateinit var siblingSpinner: Spinner
@@ -45,8 +46,8 @@ class QuestionnaireActivity : AppCompatActivity() {
     private lateinit var blueButton: Button
 
     private var selectedColor: String? = null
+    private var selectedAvatarId: Int = R.drawable.default_avatar_foreground
 
-    // Continent → Countries map
     private val continentCountries = mapOf(
         "Africa" to listOf("South Africa", "Nigeria", "Egypt", "Kenya", "Morocco"),
         "Asia" to listOf("China", "India", "Japan", "South Korea", "Thailand"),
@@ -64,6 +65,7 @@ class QuestionnaireActivity : AppCompatActivity() {
         db = FirebaseFirestore.getInstance()
 
         // Bind views
+        genderRadioGroup = findViewById(R.id.genderRadioGroup)
         birthdayInput = findViewById(R.id.birthdayInput)
         zodiacSpinner = findViewById(R.id.zodiacSpinner)
         siblingSpinner = findViewById(R.id.siblingSpinner)
@@ -118,11 +120,8 @@ class QuestionnaireActivity : AppCompatActivity() {
             continentCountries.keys.toList()
         ).apply { setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item) }
 
-        // Continent → country dynamic
         continentSpinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
-            override fun onItemSelected(
-                parent: AdapterView<*>?, view: android.view.View?, position: Int, id: Long
-            ) {
+            override fun onItemSelected(parent: AdapterView<*>?, view: android.view.View?, position: Int, id: Long) {
                 val continent = continentSpinner.selectedItem?.toString() ?: return
                 val countries = continentCountries[continent] ?: emptyList()
                 countrySpinner.adapter = ArrayAdapter(
@@ -149,25 +148,42 @@ class QuestionnaireActivity : AppCompatActivity() {
             listOf("Pizza","Burgers","Sushi","Pasta","Salad","Other")
         ).apply { setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item) }
 
-        // Color buttons
         listOf(redButton, greenButton, orangeButton, blueButton).forEach { btn ->
             btn.setOnClickListener {
                 selectedColor = btn.contentDescription.toString()
+                selectedAvatarId = when(btn.id){
+                    R.id.redButton -> R.drawable.rounded_button_red
+                    R.id.greenButton -> R.drawable.rounded_button_green
+                    R.id.orangeButton -> R.drawable.chip_negative_bg
+                    R.id.blueButton -> R.drawable.rounded_button_blue
+                    else -> R.drawable.default_avatar_foreground
+                }
                 Toast.makeText(this, "Selected color: $selectedColor", Toast.LENGTH_SHORT).show()
             }
         }
 
-        // Load saved data
         loadProfile()
 
-        // Save button
         completeProfileButton.setOnClickListener { saveProfile() }
+    }
+
+    private fun calculateAge(birthdayStr: String): Int {
+        return try {
+            val sdf = SimpleDateFormat("MM/dd/yyyy", Locale.US)
+            val birthDate = sdf.parse(birthdayStr) ?: return 0
+            val today = Calendar.getInstance()
+            val birthCal = Calendar.getInstance().apply { time = birthDate }
+            var age = today.get(Calendar.YEAR) - birthCal.get(Calendar.YEAR)
+            if (today.get(Calendar.DAY_OF_YEAR) < birthCal.get(Calendar.DAY_OF_YEAR)) age--
+            age
+        } catch (e: Exception) { 0 }
     }
 
     private fun saveProfile() {
         val uid = auth.currentUser?.uid ?: return
         val user = auth.currentUser
-
+        val selectedGenderId = genderRadioGroup.checkedRadioButtonId
+        val selectedGender = if (selectedGenderId != -1) findViewById<RadioButton>(selectedGenderId).text.toString() else null
         val selectedPetId = petRadioGroup.checkedRadioButtonId
         val selectedPet = if (selectedPetId != -1) findViewById<RadioButton>(selectedPetId).text.toString() else null
 
@@ -184,10 +200,14 @@ class QuestionnaireActivity : AppCompatActivity() {
         if (photographyCheck.isChecked) hobbies.add("Photography")
         if (otherCheck.isChecked) hobbies.add("Other")
 
+        val birthdayStr = birthdayInput.text.toString()
+        val age = calculateAge(birthdayStr)
+
         val userData = hashMapOf(
-            "name" to (user?.displayName ?: ""),
+           // "name" to (user?.displayName ?: "Unknown"),
             "email" to (user?.email ?: ""),
-            "birthday" to birthdayInput.text.toString(),
+            "birthday" to birthdayStr,
+            "age" to age,
             "zodiacSign" to zodiacSpinner.selectedItem.toString(),
             "siblings" to siblingSpinner.selectedItem.toString(),
             "continent" to continentSpinner.selectedItem.toString(),
@@ -198,14 +218,16 @@ class QuestionnaireActivity : AppCompatActivity() {
             "outgoingLevel" to outgoingSeekBar.progress,
             "petPreference" to selectedPet,
             "hobbies" to hobbies,
-            "favoriteColor" to selectedColor
+            "favoriteColor" to selectedColor,
+           // "avatarId" to selectedAvatarId,
+            "gender" to selectedGender
         )
 
         db.collection("users").document(uid)
-            .set(userData, SetOptions.merge()) // MERGE to preserve existing fields
+            .set(userData, SetOptions.merge())
             .addOnSuccessListener {
                 Toast.makeText(this, "Profile completed!", Toast.LENGTH_SHORT).show()
-                startActivity(Intent(this, MainActivity::class.java))
+                startActivity(Intent(this, ChoosingIntentActivity::class.java))
                 finish()
             }
             .addOnFailureListener { e ->
@@ -218,8 +240,6 @@ class QuestionnaireActivity : AppCompatActivity() {
         db.collection("users").document(uid).get()
             .addOnSuccessListener { doc ->
                 if (doc.exists()) {
-                    // nameTextView.text = doc.getString("name")
-                    // emailTextView.text = doc.getString("email")
                     birthdayInput.setText(doc.getString("birthday"))
                     zodiacSpinner.setSelection(
                         (zodiacSpinner.adapter as ArrayAdapter<String>).getPosition(doc.getString("zodiacSign") ?: "Aries")
@@ -234,7 +254,6 @@ class QuestionnaireActivity : AppCompatActivity() {
                         if (continentPos >= 0) continentSpinner.setSelection(continentPos)
                     }
 
-                    // Populate countries based on continent
                     val selectedContinent = continentSpinner.selectedItem?.toString()
                     val countries = continentCountries[selectedContinent] ?: emptyList()
                     countrySpinner.adapter = ArrayAdapter(
@@ -260,6 +279,7 @@ class QuestionnaireActivity : AppCompatActivity() {
                     outgoingSeekBar.progress = doc.getLong("outgoingLevel")?.toInt() ?: 0
 
                     selectedColor = doc.getString("favoriteColor")
+                    selectedAvatarId = doc.getLong("avatarId")?.toInt() ?: R.drawable.default_avatar_foreground
                 }
             }
     }

@@ -1,0 +1,68 @@
+<resources>
+    <string name="app_name">Synced</string>
+    <string name="title_home">Tuis</string>
+    <string name="title_dashboard">Paneelbord</string>
+    <string name="title_notifications">Kennisgewings</string>
+    <string name="hello_blank_fragment">Hallo leë fragment</string>
+    <string name="red_color">Rooi kleur</string>
+    <string name="green_color">Groen kleur</string>
+    <string name="yellow_colour">Geel kleur</string>
+    <string name="blue_color">Blou kleur</string>
+    <string name="purple_color">Pers kleur</string>
+    <string name="pink_color">Pienk kleur</string>
+    <string name="brown_color">Bruin kleur</string>
+    <string name="dark_green_color">Donkergroen kleur</string>
+    <string name="dark_blue_color">Donkerblou kleur</string>
+    <string name="gray_color">Grys kleur</string>
+    <string name="orange_color">Oranje kleur</string>
+    <string name="other_color">Ander</string>
+    <string name="join_synced">Sluit aan by Synced! 🎉</string>
+    <string name="choose_avatar">Kies jou karakter-avatar:</string>
+    <string name="register">Registreer</string>
+    <string name="login_hint">Het jy reeds ’n rekening? Meld aan</string>
+
+    <!-- Avatar content descriptions -->
+    <string name="avatar1_desc">Avatar opsie 1</string>
+    <string name="avatar2_desc">Avatar opsie 2</string>
+    <string name="avatar3_desc">Avatar opsie 3</string>
+    <string name="avatar4_desc">Avatar opsie 4</string>
+    <string name="avatar5_desc">Avatar opsie 5</string>
+    <string name="avatar6_desc">Avatar opsie 6</string>
+    <string name="avatar7_desc">Avatar opsie 7</string>
+    <string name="avatar8_desc">Avatar opsie 8</string>
+
+    <string name="home">Tuis</string>
+    <string name="messages">Boodskappe</string>
+    <string name="profile">Profiel</string>
+    <string name="settings">Instellings</string>
+    <string name="help">Hulp</string>
+
+    <string name="_3h_ago">3u gelede</string>
+    <string name="we_should_definitely_watch_that_movie_together">Ons moet daardie fliek beslis saam kyk!</string>
+    <string name="jordan_libra">Jordan (Weegskaal)</string>
+    <string name="_1h_ago">1u gelede</string>
+    <string name="thanks_for_the_book_recommendation">Dankie vir die boekaanbeveling!</string>
+    <string name="sam_gemini">Sam (Tweeling)</string>
+    <string name="_2m_ago">2m gelede</string>
+    <string name="i_love_the_office_want_to_play_a_game">Ek hou van The Office! Wil jy ’n speletjie speel 🎉?</string>
+    <string name="alex_aries">Alex (Ram)</string>
+
+    <string name="email">E-pos</string>
+    <string name="password">Wagwoord</string>
+    <string name="confirm_password">Bevestig wagwoord</string>
+    <string name="name">Naam</string>
+    <string name="todo">TAKE</string>
+
+    <string name="biometric_title">Biometriese Aanmelding</string>
+    <string name="biometric_subtitle">Gebruik jou vingerafdruk of gesig om aan te meld</string>
+    <string name="biometric_cancel">Kanselleer</string>
+
+    <string-array name="languages">
+        <item>Engels</item>
+        <item>Afrikaans</item>
+        <item>Zulu</item>
+    </string-array>
+
+    <string name="default_web_client_id">134621070266-ahgd1nfjr2qvnkpjfv6sh65cta0o3slu.apps.googleusercontent.com</string>
+    <string name="facebook_app_id">123456789012345</string>
+</resources>

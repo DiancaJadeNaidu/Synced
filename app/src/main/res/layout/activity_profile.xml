@@ -1,0 +1,110 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/gradient_background"
+    android:padding="24dp">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:gravity="center_horizontal">
+
+        <!-- Profile Picture -->
+        <ImageView
+            android:id="@+id/imgProfile"
+            android:layout_width="140dp"
+            android:layout_height="140dp"
+            android:scaleType="centerCrop"
+            android:src="@drawable/default_avatar_foreground"
+            android:background="@drawable/rounded_image_bg"
+            android:layout_marginBottom="16dp" />
+
+        <!-- Name + Age -->
+        <TextView
+            android:id="@+id/txtNameAge"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text=""
+            android:textSize="22sp"
+            android:textStyle="bold"
+            android:textColor="@android:color/white"
+            android:layout_marginBottom="8dp" />
+
+        <!-- Intent -->
+        <TextView
+            android:id="@+id/txtIntent"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text=""
+            android:textSize="16sp"
+            android:textColor="@android:color/white"
+            android:layout_marginBottom="24dp" />
+
+        <!-- Info Card -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:background="@drawable/rounded_white_card"
+            android:padding="20dp">
+
+            <TextView
+                android:id="@+id/txtBio"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Bio:"
+                android:textSize="15sp"
+                android:textColor="@color/dark_gray"
+                android:layout_marginBottom="12dp" />
+
+            <TextView
+                android:id="@+id/txtGender"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Gender:"
+                android:textSize="15sp"
+                android:textColor="@color/dark_gray"
+                android:layout_marginBottom="12dp" />
+
+            <TextView
+                android:id="@+id/txtLocation"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Location: "
+                android:textSize="15sp"
+                android:textColor="@color/dark_gray"
+                android:layout_marginBottom="12dp" />
+
+            <TextView
+                android:id="@+id/txtHobbies"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Hobbies:"
+                android:textSize="15sp"
+                android:textColor="@color/dark_gray" />
+
+        </LinearLayout>
+
+        <!-- Buttons -->
+        <Button
+            android:id="@+id/btnEditProfile"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Edit Profile"
+            android:layout_marginTop="24dp"
+            android:backgroundTint="@color/primary"
+            android:textColor="@android:color/white" />
+
+        <Button
+            android:id="@+id/btnSettings"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Settings"
+            android:layout_marginTop="12dp"
+            android:backgroundTint="@color/secondary"
+            android:textColor="@android:color/black" />
+
+    </LinearLayout>
+</ScrollView>

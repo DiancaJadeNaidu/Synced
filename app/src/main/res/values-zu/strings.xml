@@ -1,0 +1,68 @@
+<resources>
+    <string name="app_name">Synced</string>
+    <string name="title_home">Ikhaya</string>
+    <string name="title_dashboard">Ideshibhodi</string>
+    <string name="title_notifications">Izaziso</string>
+    <string name="hello_blank_fragment">Sawubona i-fragment engenalutho</string>
+    <string name="red_color">Umbala obomvu</string>
+    <string name="green_color">Umbala oluhlaza</string>
+    <string name="yellow_colour">Umbala ophuzi</string>
+    <string name="blue_color">Umbala oluhlaza okwesibhakabhaka</string>
+    <string name="purple_color">Umbala onsomi</string>
+    <string name="pink_color">Umbala opinki</string>
+    <string name="brown_color">Umbala onsundu</string>
+    <string name="dark_green_color">Umbala oluhlaza okumnyama</string>
+    <string name="dark_blue_color">Umbala oluhlaza okwesibhakabhaka okumnyama</string>
+    <string name="gray_color">Umbala ongwevu</string>
+    <string name="orange_color">Umbala owolintshi</string>
+    <string name="other_color">Okunye</string>
+    <string name="join_synced">Joyina i-Synced! 🎉</string>
+    <string name="choose_avatar">Khetha i-avatar yomlingiswa wakho:</string>
+    <string name="register">Bhalisa</string>
+    <string name="login_hint">Usunayo i-akhawunti? Ngena</string>
+
+    <!-- Avatar content descriptions -->
+    <string name="avatar1_desc">Inketho ye-avatar 1</string>
+    <string name="avatar2_desc">Inketho ye-avatar 2</string>
+    <string name="avatar3_desc">Inketho ye-avatar 3</string>
+    <string name="avatar4_desc">Inketho ye-avatar 4</string>
+    <string name="avatar5_desc">Inketho ye-avatar 5</string>
+    <string name="avatar6_desc">Inketho ye-avatar 6</string>
+    <string name="avatar7_desc">Inketho ye-avatar 7</string>
+    <string name="avatar8_desc">Inketho ye-avatar 8</string>
+
+    <string name="home">Ikhaya</string>
+    <string name="messages">Imiyalezo</string>
+    <string name="profile">Iphrofayela</string>
+    <string name="settings">Izilungiselelo</string>
+    <string name="help">Usizo</string>
+
+    <string name="_3h_ago">3h edlule</string>
+    <string name="we_should_definitely_watch_that_movie_together">Kumele sibuke leyo movie ndawonye!</string>
+    <string name="jordan_libra">Jordan (iLibra)</string>
+    <string name="_1h_ago">1h edlule</string>
+    <string name="thanks_for_the_book_recommendation">Ngiyabonga ngesiphakamiso sencwadi!</string>
+    <string name="sam_gemini">Sam (iGemini)</string>
+    <string name="_2m_ago">2m edlule</string>
+    <string name="i_love_the_office_want_to_play_a_game">Ngiyithanda i-The Office! Ufuna ukudlala umdlalo 🎉?</string>
+    <string name="alex_aries">Alex (i-Aries)</string>
+
+    <string name="email">I-imeyili</string>
+    <string name="password">Iphasiwedi</string>
+    <string name="confirm_password">Qinisekisa iphasiwedi</string>
+    <string name="name">Igama</string>
+    <string name="todo">OKUZO KWENZWA</string>
+
+    <string name="biometric_title">Ukungena nge-Biometric</string>
+    <string name="biometric_subtitle">Sebenzisa iminwe noma ubuso ukuze ungene</string>
+    <string name="biometric_cancel">Khansela</string>
+
+    <string-array name="languages">
+        <item>IsiNgisi</item>
+        <item>IsiBhunu</item>
+        <item>IsiZulu</item>
+    </string-array>
+
+    <string name="default_web_client_id">134621070266-ahgd1nfjr2qvnkpjfv6sh65cta0o3slu.apps.googleusercontent.com</string>
+    <string name="facebook_app_id">123456789012345</string>
+</resources>

@@ -27,6 +27,18 @@
         <activity android:name=".RegisterActivity" />
         <activity android:name=".RulesActivity" />
         <activity android:name=".QuestionnaireActivity" />
+        <activity
+            android:name=".ChoosingIntentActivity"
+            android:theme="@style/Theme.Synced.Fullscreen"/>
+
+        <!-- Matchmaking flow -->
+        <activity android:name=".TopMatchesActivity" />
+        <activity android:name=".ViewProfileActivity" />
+        <activity android:name=".SendMessageRequestActivity" />
+
+        <activity android:name=".ProfileActivity" />
+
+        <activity android:name=".SettingsActivity" />
 
 
     </application>

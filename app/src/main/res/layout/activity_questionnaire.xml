@@ -49,7 +49,35 @@
                 android:textColor="@android:color/black"
                 android:textColorHint="@android:color/black"
                 android:padding="12dp"/>
+            <!-- Gender -->
+            <TextView
+                android:text="⚧ Gender"
+                android:textColor="@android:color/black"
+                android:layout_marginTop="12dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"/>
 
+            <RadioGroup
+                android:id="@+id/genderRadioGroup"
+                android:orientation="horizontal"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center">
+
+                <RadioButton
+                    android:id="@+id/maleRadio"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="♂ Male"
+                    android:textColor="@android:color/black"/>
+
+                <RadioButton
+                    android:id="@+id/femaleRadio"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="♀ Female"
+                    android:textColor="@android:color/black"/>
+            </RadioGroup>
             <!-- Zodiac -->
             <TextView
                 android:text="♌ Zodiac Sign"

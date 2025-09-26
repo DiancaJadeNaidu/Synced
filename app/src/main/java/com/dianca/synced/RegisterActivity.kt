@@ -14,7 +14,6 @@ class RegisterActivity : AppCompatActivity() {
     private lateinit var binding: ActivityRegisterBinding
     private lateinit var auth: FirebaseAuth
 
-    // Selected avatar resource ID
     private var selectedAvatarResId: Int? = null
     private var selectedAvatarView: ImageView? = null
 
@@ -32,14 +31,8 @@ class RegisterActivity : AppCompatActivity() {
 
     private fun setupAvatarSelection() {
         val avatarViews = listOf(
-            binding.avatar1,
-            binding.avatar2,
-            binding.avatar3,
-            binding.avatar4,
-            binding.avatar5,
-            binding.avatar6,
-            binding.avatar7,
-            binding.avatar8
+            binding.avatar1, binding.avatar2, binding.avatar3, binding.avatar4,
+            binding.avatar5, binding.avatar6, binding.avatar7, binding.avatar8
         )
 
         for (avatar in avatarViews) {
@@ -48,16 +41,25 @@ class RegisterActivity : AppCompatActivity() {
     }
 
     private fun selectAvatar(avatar: ImageView) {
-        // Remove highlight from previous avatar
+        // Remove previous highlight
         selectedAvatarView?.background = null
 
-        // Highlight the selected avatar
+        // Highlight current
         avatar.setBackgroundResource(R.drawable.selected_avatar_border)
-
         selectedAvatarView = avatar
 
-        // Save selected avatar resource ID
-        selectedAvatarResId = avatar.id
+        // Save actual drawable ID
+        selectedAvatarResId = when (avatar.id) {
+            R.id.avatar1 -> R.drawable.ic_avatar1
+            R.id.avatar2 -> R.drawable.ic_avatar2
+            R.id.avatar3 -> R.drawable.ic_avatar3
+            R.id.avatar4 -> R.drawable.ic_avatar4
+            R.id.avatar5 -> R.drawable.ic_avatar5
+            R.id.avatar6 -> R.drawable.ic_avatar6
+            R.id.avatar7 -> R.drawable.ic_avatar7
+            R.id.avatar8 -> R.drawable.ic_avatar8
+            else -> R.drawable.default_avatar_foreground
+        }
     }
 
     private fun setupRegisterButton() {
@@ -86,36 +88,24 @@ class RegisterActivity : AppCompatActivity() {
             auth.createUserWithEmailAndPassword(email, password)
                 .addOnCompleteListener { task ->
                     if (task.isSuccessful) {
-                        // Save extra user info to Firestore
                         val uid = auth.currentUser?.uid ?: return@addOnCompleteListener
                         val userMap = hashMapOf(
                             "name" to name,
                             "avatarId" to selectedAvatarResId
                         )
-                        val db = FirebaseFirestore.getInstance()
-                        db.collection("users").document(uid)
+                        FirebaseFirestore.getInstance()
+                            .collection("users")
+                            .document(uid)
                             .set(userMap)
                             .addOnSuccessListener {
-                                Toast.makeText(
-                                    this,
-                                    "Registration successful",
-                                    Toast.LENGTH_SHORT
-                                ).show()
+                                Toast.makeText(this, "Registration successful", Toast.LENGTH_SHORT).show()
                                 navigateToQuestionnaire()
                             }
                             .addOnFailureListener { e ->
-                                Toast.makeText(
-                                    this,
-                                    "Failed to save user info: ${e.message}",
-                                    Toast.LENGTH_SHORT
-                                ).show()
+                                Toast.makeText(this, "Failed to save user info: ${e.message}", Toast.LENGTH_SHORT).show()
                             }
                     } else {
-                        Toast.makeText(
-                            this,
-                            "Registration failed: ${task.exception?.message}",
-                            Toast.LENGTH_SHORT
-                        ).show()
+                        Toast.makeText(this, "Registration failed: ${task.exception?.message}", Toast.LENGTH_SHORT).show()
                     }
                 }
         }

@@ -50,15 +50,20 @@
     <string name="confirm_password">Confirm Password</string>
     <string name="name">Name</string>
     <string name="todo">TODO</string>
+    <string name="biometric_title">Biometric Login</string>
+    <string name="biometric_subtitle">Use your fingerprint or face to login</string>
+    <string name="biometric_cancel">Cancel</string>
+
 
     <string-array name="languages">
         <item>English</item>
         <item>Afrikaans</item>
         <item>Zulu</item>
     </string-array>
-     <string name="default_web_client_id">
+    <string name="default_web_client_id">
     134621070266-ahgd1nfjr2qvnkpjfv6sh65cta0o3slu.apps.googleusercontent.com
 </string>
     <string name="facebook_app_id">123456789012345</string>
+
 
 </resources>

@@ -1,12 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    xmlns:app="http://schemas.android.com/apk/res-auto">
+    android:layout_height="match_parent">
 
-    <!-- TODO: Update blank fragment layout -->
-      <ScrollView
+    <ScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="@drawable/gradient_bg"
@@ -21,7 +20,7 @@
             <!-- White rounded card -->
             <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="695dp"
+                android:layout_height="wrap_content"
                 android:background="@drawable/rounded_white_card"
                 android:orientation="vertical"
                 android:padding="20dp">
@@ -32,20 +31,28 @@
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
                     android:paddingBottom="20dp"
-                    android:text="Welcome Back! 👋"
+                    android:text="Welcome Back!"
                     android:textColor="@android:color/black"
-                    android:textSize="30sp"
+                    android:textSize="26sp"
                     android:textStyle="bold" />
 
                 <!-- Language Dropdown -->
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Choose Language:"
+                    android:textSize="14sp"
+                    android:textColor="@android:color/black"
+                    android:layout_marginBottom="6dp"/>
+
                 <Spinner
                     android:id="@+id/spinnerLanguage"
                     android:layout_width="match_parent"
-                    android:layout_height="57dp"
-                    android:layout_marginBottom="12dp"
-                    android:background="@drawable/rounded_input_bg"
-                    android:padding="10dp"
-                    app:cornerRadius="25dp" />
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="20dp"
+                    android:padding="8dp"
+                    android:background="@android:drawable/btn_dropdown"
+                    android:spinnerMode="dropdown" />
 
                 <!-- Email -->
                 <EditText
@@ -54,7 +61,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginBottom="12dp"
                     android:background="@drawable/rounded_input_bg"
-                    android:hint="Email"
+                    android:hint="@string/email"
                     android:textColorHint="#333333"
                     android:inputType="textEmailAddress"
                     android:textColor="#333333"
@@ -67,7 +74,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginBottom="20dp"
                     android:background="@drawable/rounded_input_bg"
-                    android:hint="Password"
+                    android:hint="@string/password"
                     android:textColorHint="#333333"
                     android:textColor="#333333"
                     android:inputType="textPassword"
@@ -82,7 +89,7 @@
                     android:padding="12dp"
                     android:backgroundTint="#9A61FF"
                     app:cornerRadius="25dp"
-                    android:text="Login"
+                    android:text="login"
                     android:textSize="16sp"
                     android:textColor="@android:color/white" />
 
@@ -95,7 +102,7 @@
                     android:backgroundTint="#F0598E"
                     android:padding="12dp"
                     app:cornerRadius="25dp"
-                    android:text="Register"
+                    android:text="@string/register"
                     android:textSize="16sp"
                     android:textColor="@android:color/white" />
 
@@ -125,7 +132,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginBottom="10dp"
-                        android:text="Biometric Login"
+                        android:text="@string/biometric_title"
                         android:textColor="@android:color/black"
                         android:textSize="16sp" />
 
@@ -151,6 +158,7 @@
                             android:background="@drawable/rounded_icon_bg"
                             android:padding="10dp"
                             android:src="@drawable/ic_face" />
+
                     </LinearLayout>
                 </LinearLayout>
 
@@ -158,6 +166,5 @@
 
         </LinearLayout>
     </ScrollView>
-
 
 </FrameLayout>

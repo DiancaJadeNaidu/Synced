@@ -50,4 +50,12 @@
     <color name="lightBlue">#6FF2FF</color>
     <color name="Button1">#9A61FF</color>
     <color name="Button2">#00B8E5</color>
+
+    <!-- Main App Colors -->
+    <color name="primary">#5A31F4</color> <!-- or any color you want -->
+    <color name="secondary">#E0E0E0</color>
+    <color name="accent">#FF4081</color>
+    <color name="dark_gray">#757575</color>
+
+
 </resources>

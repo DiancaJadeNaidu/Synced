@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:padding="24dp"
+    android:background="@drawable/gradient_background">
+
+    <ImageView
+        android:id="@+id/imgMatchAvatar"
+        android:layout_width="100dp"
+        android:layout_height="100dp"
+        android:layout_gravity="center_horizontal"
+        android:scaleType="centerCrop"
+        android:src="@drawable/default_avatar_foreground"
+        android:background="@drawable/rounded_image_bg"
+        android:layout_marginBottom="16dp" />
+
+    <TextView
+        android:id="@+id/txtMatchName"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Match Name"
+        android:textSize="20sp"
+        android:textStyle="bold"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginBottom="24dp"
+        android:textColor="@color/black" />
+
+    <EditText
+        android:id="@+id/etMessage"
+        android:layout_width="match_parent"
+        android:layout_height="120dp"
+        android:hint="Write a short message..."
+        android:gravity="top|start"
+        android:background="@drawable/default_border"
+        android:padding="12dp"
+        android:inputType="textMultiLine"
+        android:layout_marginBottom="24dp"/>
+
+    <Button
+        android:id="@+id/btnSendRequest"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Send Request"
+        android:backgroundTint="@color/primary"
+        android:textColor="@android:color/white"/>
+</LinearLayout>
