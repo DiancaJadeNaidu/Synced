@@ -10,5 +10,10 @@ data class MatchModel(
     val gender: String,
     val location: String,
     val avatarName: String,
-    val percentage: Int = 0
+    val percentage: Int,
+    val hobbies: List<String> = emptyList(),
+    val food: String = "",
+    val movieGenre: String = "",
+    val favoriteColor: String = "",
+    val zodiacSign: String = ""      // <-- Added for zodiac compatibility
 )

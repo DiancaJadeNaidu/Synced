@@ -28,8 +28,8 @@ class TopMatchesActivity : AppCompatActivity() {
 
     private var allMatches = mutableListOf<MatchModel>()
     private var filteredMatches = mutableListOf<MatchModel>()
+    private lateinit var currentUser: MatchModel
 
-    // ----------------- CONTINENT + COUNTRY -----------------
     private val continentCountries = mapOf(
         "Africa" to listOf("South Africa", "Nigeria", "Egypt", "Kenya", "Morocco"),
         "Asia" to listOf("China", "India", "Japan", "South Korea", "Thailand"),
@@ -42,12 +42,6 @@ class TopMatchesActivity : AppCompatActivity() {
     private var selectedGender: String = "Both"
     private var selectedContinent: String? = null
     private var selectedCountry: String? = null
-
-    // ----------------- CURRENT USER DATA -----------------
-    private var currentUserHobbies: List<String> = emptyList()
-    private var currentUserFood: String = ""
-    private var currentUserMovieGenre: String = ""
-    private var currentUserFavoriteColor: String = ""
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -62,22 +56,13 @@ class TopMatchesActivity : AppCompatActivity() {
         continentSpinner = findViewById(R.id.spinnerContinent)
         countrySpinner = findViewById(R.id.spinnerCountry)
 
-        adapter = MatchAdapter(filteredMatches) { selectedMatch ->
-            val intent = Intent(this, ViewProfileActivity::class.java)
-            intent.putExtra("uid", selectedMatch.uid)
-            startActivity(intent)
-        }
-
         recyclerView.layoutManager = LinearLayoutManager(this)
-        recyclerView.adapter = adapter
 
         setupFilters()
         loadCurrentUserAndMatches()
     }
 
-    // ----------------- SETUP FILTERS -----------------
     private fun setupFilters() {
-        // Gender spinner
         val genders = listOf("Both", "Male", "Female")
         genderSpinner.adapter = ArrayAdapter(this, android.R.layout.simple_spinner_item, genders).apply {
             setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
@@ -90,7 +75,6 @@ class TopMatchesActivity : AppCompatActivity() {
             override fun onNothingSelected(parent: AdapterView<*>?) {}
         }
 
-        // Continent spinner
         val continents = listOf("All") + continentCountries.keys
         continentSpinner.adapter = ArrayAdapter(this, android.R.layout.simple_spinner_item, continents).apply {
             setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
@@ -122,30 +106,40 @@ class TopMatchesActivity : AppCompatActivity() {
         }
     }
 
-    // ----------------- LOAD USER + MATCHES -----------------
     private fun loadCurrentUserAndMatches() {
         progressBar.visibility = View.VISIBLE
-        val currentUser = auth.currentUser ?: return
+        val firebaseUser = auth.currentUser ?: return
 
-        db.collection("users").document(currentUser.uid).get().addOnSuccessListener { doc ->
+        db.collection("users").document(firebaseUser.uid).get().addOnSuccessListener { doc ->
             if (doc.exists()) {
-                currentUserHobbies = doc.get("hobbies") as? List<String> ?: emptyList()
-                currentUserFood = doc.getString("food") ?: ""
-                currentUserMovieGenre = doc.getString("movieGenre") ?: ""
-                currentUserFavoriteColor = doc.getString("favoriteColor") ?: ""
+                currentUser = MatchModel(
+                    uid = firebaseUser.uid,
+                    name = doc.getString("name") ?: "Me",
+                    age = calculateAge(doc.getString("birthday") ?: ""),
+                    bio = "",
+                    gender = doc.getString("gender") ?: "",
+                    location = doc.getString("country") ?: "",
+                    avatarName = "ic_avatar1",
+                    percentage = 0,
+                    hobbies = doc.get("hobbies") as? List<String> ?: emptyList(),
+                    food = doc.getString("food") ?: "",
+                    movieGenre = doc.getString("movieGenre") ?: "",
+                    favoriteColor = doc.getString("favoriteColor") ?: "",
+                    zodiacSign = doc.getString("zodiacSign") ?: ""
+                )
             }
             loadMatches()
         }
     }
 
     private fun loadMatches() {
-        val currentUser = auth.currentUser ?: return
+        val firebaseUser = auth.currentUser ?: return
+
         db.collection("users").get().addOnSuccessListener { result ->
             allMatches.clear()
-
             for (doc in result) {
                 val uid = doc.id
-                if (uid == currentUser.uid) continue
+                if (uid == firebaseUser.uid) continue
 
                 val name = doc.getString("name") ?: "Anonymous"
                 val birthday = doc.getString("birthday") ?: ""
@@ -154,6 +148,7 @@ class TopMatchesActivity : AppCompatActivity() {
                 val movieGenre = doc.getString("movieGenre") ?: ""
                 val favoriteColor = doc.getString("favoriteColor") ?: ""
                 val hobbies = doc.get("hobbies") as? List<String> ?: emptyList()
+                val zodiacSign = doc.getString("zodiacSign") ?: ""
 
                 val rawGender = doc.getString("gender") ?: "N/A"
                 val gender = rawGender.replace("♀", "").replace("♂", "").trim()
@@ -161,7 +156,7 @@ class TopMatchesActivity : AppCompatActivity() {
                 val age = calculateAge(birthday)
                 val bio = "Loves $food, enjoys $movieGenre movies, favorite color $favoriteColor"
 
-                val percentage = calculateCompatibility(hobbies, food, movieGenre, favoriteColor)
+                val percentage = calculateCompatibility(hobbies, food, movieGenre, favoriteColor, zodiacSign, age)
 
                 val match = MatchModel(
                     uid = uid,
@@ -171,10 +166,25 @@ class TopMatchesActivity : AppCompatActivity() {
                     gender = gender,
                     location = country,
                     avatarName = "ic_avatar1",
-                    percentage = percentage
+                    percentage = percentage,
+                    hobbies = hobbies,
+                    food = food,
+                    movieGenre = movieGenre,
+                    favoriteColor = favoriteColor,
+                    zodiacSign = zodiacSign
                 )
                 allMatches.add(match)
             }
+
+            filteredMatches.clear()
+            filteredMatches.addAll(allMatches.sortedByDescending { it.percentage })
+
+            adapter = MatchAdapter(filteredMatches, currentUser) { selectedMatch ->
+                val intent = Intent(this, ViewProfileActivity::class.java)
+                intent.putExtra("uid", selectedMatch.uid)
+                startActivity(intent)
+            }
+            recyclerView.adapter = adapter
 
             applyFilters()
             progressBar.visibility = View.GONE
@@ -184,54 +194,100 @@ class TopMatchesActivity : AppCompatActivity() {
         }
     }
 
-    // ----------------- FILTER + SORT -----------------
     private fun applyFilters() {
+        if (!::adapter.isInitialized) return
+
         filteredMatches.clear()
-
         for (match in allMatches) {
-            // Gender filter
-            if (selectedGender != "Both" && !match.gender.equals(selectedGender, ignoreCase = true)) {
-                continue
-            }
-
-            // Continent filter
+            if (selectedGender != "Both" && !match.gender.equals(selectedGender, true)) continue
             if (selectedContinent != null) {
                 val countries = continentCountries[selectedContinent]
-                if (countries != null && !countries.contains(match.location)) {
-                    continue
-                }
+                if (countries != null && !countries.contains(match.location)) continue
             }
-
-            // Country filter
-            if (selectedCountry != null && match.location != selectedCountry) {
-                continue
-            }
-
+            if (selectedCountry != null && match.location != selectedCountry) continue
             filteredMatches.add(match)
         }
 
-        // Sort by percentage
         filteredMatches.sortByDescending { it.percentage }
         adapter.notifyDataSetChanged()
     }
 
-    // ----------------- HELPERS -----------------
-    private fun calculateCompatibility(hobbies: List<String>, food: String, movieGenre: String, favoriteColor: String): Int {
-        var score = 0
-        var total = 4 // hobbies, food, movie, color
+    private fun calculateCompatibility(
+        hobbies: List<String>,
+        food: String,
+        movieGenre: String,
+        favoriteColor: String,
+        zodiacSign: String,
+        age: Int
+    ): Int {
+        var totalScore = 0.0
+        var totalWeight = 0.0
 
-        // Hobbies overlap
-        val sharedHobbies = hobbies.intersect(currentUserHobbies.toSet()).size
-        if (currentUserHobbies.isNotEmpty()) {
-            score += sharedHobbies
-            total += currentUserHobbies.size
+        // Hobbies: 15%
+        val hobbyWeight = 15.0
+        val sharedHobbies = hobbies.intersect(currentUser.hobbies.toSet()).size
+        val hobbyScore = if (currentUser.hobbies.isNotEmpty())
+            (sharedHobbies.toDouble() / currentUser.hobbies.size) * hobbyWeight else 0.0
+        totalScore += hobbyScore
+        totalWeight += hobbyWeight
+
+        // Food: 5%
+        val foodWeight = 5.0
+        if (food.isNotEmpty() && food == currentUser.food) totalScore += foodWeight
+        totalWeight += foodWeight
+
+        // Movie genre: 5%
+        val movieWeight = 5.0
+        if (movieGenre.isNotEmpty() && movieGenre == currentUser.movieGenre) totalScore += movieWeight
+        totalWeight += movieWeight
+
+        // Favorite color: 5%
+        val colorWeight = 5.0
+        if (favoriteColor.isNotEmpty() && favoriteColor == currentUser.favoriteColor) totalScore += colorWeight
+        totalWeight += colorWeight
+
+        // Zodiac: 35%
+        val zodiacWeight = 35.0
+        totalScore += getZodiacCompatibility(zodiacSign, currentUser.zodiacSign) * zodiacWeight
+        totalWeight += zodiacWeight
+
+        // Age similarity: 15%
+        val ageWeight = 15.0
+        val ageDiff = kotlin.math.abs(age - currentUser.age)
+        val ageScore = when {
+            ageDiff == 0 -> ageWeight.toDouble()
+            ageDiff <= 2 -> ageWeight * 0.8
+            ageDiff <= 5 -> ageWeight * 0.5
+            ageDiff <= 10 -> ageWeight * 0.2
+            else -> 0.0
         }
+        totalScore += ageScore
+        totalWeight += ageWeight
 
-        if (food == currentUserFood && food.isNotEmpty()) score++
-        if (movieGenre == currentUserMovieGenre && movieGenre.isNotEmpty()) score++
-        if (favoriteColor == currentUserFavoriteColor && favoriteColor.isNotEmpty()) score++
+        return ((totalScore / totalWeight) * 100).roundToInt()
+    }
 
-        return if (total > 0) ((score.toDouble() / total) * 100).roundToInt() else 0
+    private fun getZodiacCompatibility(sign1: String, sign2: String): Double {
+        val compatiblePairs = mapOf(
+            "Aries" to listOf("Leo", "Sagittarius", "Gemini", "Aquarius"),
+            "Taurus" to listOf("Virgo", "Capricorn", "Cancer", "Pisces"),
+            "Gemini" to listOf("Libra", "Aquarius", "Aries", "Leo"),
+            "Cancer" to listOf("Scorpio", "Pisces", "Taurus", "Virgo"),
+            "Leo" to listOf("Aries", "Sagittarius", "Gemini", "Libra"),
+            "Virgo" to listOf("Taurus", "Capricorn", "Cancer", "Scorpio"),
+            "Libra" to listOf("Gemini", "Aquarius", "Leo", "Sagittarius"),
+            "Scorpio" to listOf("Cancer", "Pisces", "Virgo", "Capricorn"),
+            "Sagittarius" to listOf("Aries", "Leo", "Libra", "Aquarius"),
+            "Capricorn" to listOf("Taurus", "Virgo", "Scorpio", "Pisces"),
+            "Aquarius" to listOf("Gemini", "Libra", "Aries", "Sagittarius"),
+            "Pisces" to listOf("Cancer", "Scorpio", "Taurus", "Capricorn")
+        )
+
+        return when {
+            sign1 == sign2 -> 1.0
+            compatiblePairs[sign1]?.contains(sign2) == true -> 0.8
+            else -> 0.3
+        }
     }
 
     private fun calculateAge(birthday: String): Int {
@@ -243,9 +299,7 @@ class TopMatchesActivity : AppCompatActivity() {
             dob.time = birthDate ?: return 0
 
             var age = today.get(Calendar.YEAR) - dob.get(Calendar.YEAR)
-            if (today.get(Calendar.DAY_OF_YEAR) < dob.get(Calendar.DAY_OF_YEAR)) {
-                age--
-            }
+            if (today.get(Calendar.DAY_OF_YEAR) < dob.get(Calendar.DAY_OF_YEAR)) age--
             age
         } catch (e: Exception) {
             0

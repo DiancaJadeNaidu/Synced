@@ -6,6 +6,7 @@
     android:layout_height="wrap_content"
     android:layout_margin="12dp"
     app:cardCornerRadius="16dp"
+    app:cardBackgroundColor="@android:color/white"
     app:cardElevation="6dp">
 
     <LinearLayout
@@ -15,7 +16,7 @@
         android:padding="16dp"
         android:gravity="center_vertical">
 
-        <!-- Zodiac Icon -->
+        <!-- Zodiac / Avatar Icon -->
         <ImageView
             android:id="@+id/zodiacIcon"
             android:layout_width="56dp"
@@ -60,28 +61,39 @@
                 android:orientation="horizontal">
 
                 <TextView
-                    android:id="@+id/compatibleCustom"
+                    android:id="@+id/traitsChip"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:padding="8dp"
-                    android:text="Compatible\nSigns"
-                    android:gravity="center"
-                    android:maxLines="2"
-                    android:textColor="#8032CD32"
-                    android:background="@drawable/chip_like_bg" />
-
-                <TextView
-                    android:id="@+id/interestsCustom"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:padding="8dp"
-                    android:text="Similar\nInterests"
+                    android:paddingStart="12dp"
+                    android:paddingEnd="12dp"
+                    android:paddingTop="6dp"
+                    android:paddingBottom="6dp"
+                    android:text="Traits"
                     android:gravity="center"
                     android:maxLines="2"
                     android:textColor="#8032CD32"
                     android:background="@drawable/chip_like_bg"
+                    android:clickable="true"
+                    android:focusable="true" />
+
+                <TextView
+                    android:id="@+id/zodiacChip"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:paddingStart="12dp"
+                    android:paddingEnd="12dp"
+                    android:paddingTop="6dp"
+                    android:paddingBottom="6dp"
+                    android:text="Zodiac"
+                    android:gravity="center"
+                    android:maxLines="2"
+                    android:textColor="#8032CD32"
+                    android:background="@drawable/chip_like_bg"
+                    android:clickable="true"
+                    android:focusable="true"
                     android:layout_marginStart="8dp"/>
             </LinearLayout>
+
         </LinearLayout>
 
         <!-- Match % + Profile Link -->
