@@ -1,5 +1,6 @@
 package com.dianca.synced
 
+import android.content.Intent
 import android.os.Bundle
 import android.widget.Button
 import android.widget.TextView
@@ -19,17 +20,28 @@ class FriendGamesActivity : AppCompatActivity() {
 
         findViewById<TextView>(R.id.tvFriendTitle).text = "Play Games with $friendName"
 
-        findViewById<Button>(R.id.btnTicTacToe).setOnClickListener {
-            // TODO: open Tic Tac Toe screen
+        findViewById<Button>(R.id.btnHangman).setOnClickListener {
+            val intent = Intent(this, HangmanActivity::class.java)
+            intent.putExtra("friendName", friendName)
+            startActivity(intent)
         }
+
         findViewById<Button>(R.id.btnTrivia).setOnClickListener {
-            // TODO: open Trivia Quiz screen
+            val intent = Intent(this, TriviaActivity::class.java)
+            intent.putExtra("friendName", friendName)
+            startActivity(intent)
         }
+
         findViewById<Button>(R.id.btnEmojiMatch).setOnClickListener {
-            // TODO: open Emoji Match screen
+            val intent = Intent(this, EmojiMatchActivity::class.java)
+            intent.putExtra("friendName", friendName)
+            startActivity(intent)
         }
-        findViewById<Button>(R.id.btnQuickDraw).setOnClickListener {
-            // TODO: open Quick Draw screen
+
+        findViewById<Button>(R.id.btnRapidTap).setOnClickListener {
+            val intent = Intent(this, RapidTapActivity::class.java)
+            intent.putExtra("friendName", friendName)
+            startActivity(intent)
         }
     }
 }

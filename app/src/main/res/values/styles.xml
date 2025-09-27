@@ -102,5 +102,16 @@
         <item>Mexican</item>
         <item>Other</item>
     </string-array>
+    <style name="GameButton">
+        <item name="android:layout_width">100dp</item>
+        <item name="android:layout_height">100dp</item>
+        <item name="android:textSize">36sp</item>
+    </style>
+    <style name="GameButtonSmall">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_marginTop">8dp</item>
+        <item name="android:textSize">18sp</item>
+    </style>
 
 </resources>

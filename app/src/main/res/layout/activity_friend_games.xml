@@ -5,40 +5,32 @@
     android:padding="16dp"
     android:background="@drawable/gradient_bg">
 
-    <TextView
-        android:id="@+id/tvFriendTitle"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Play Games"
-        android:textSize="20sp"
-        android:textStyle="bold"
-        android:layout_gravity="center_horizontal"
-        android:layout_marginBottom="24dp"/>
-
     <Button
-        android:id="@+id/btnTicTacToe"
+        android:id="@+id/btnHangman"
         android:layout_width="match_parent"
-        android:layout_height="48dp"
-        android:text="Tic Tac Toe"
-        android:layout_marginBottom="12dp"/>
+        android:layout_height="wrap_content"
+        android:text="Hangman"
+        android:layout_marginTop="16dp"/>
 
     <Button
         android:id="@+id/btnTrivia"
         android:layout_width="match_parent"
-        android:layout_height="48dp"
+        android:layout_height="wrap_content"
         android:text="Trivia Quiz"
-        android:layout_marginBottom="12dp"/>
+        android:layout_marginTop="16dp"/>
 
     <Button
         android:id="@+id/btnEmojiMatch"
         android:layout_width="match_parent"
-        android:layout_height="48dp"
+        android:layout_height="wrap_content"
         android:text="Emoji Match"
-        android:layout_marginBottom="12dp"/>
+        android:layout_marginTop="16dp"/>
 
     <Button
-        android:id="@+id/btnQuickDraw"
+        android:id="@+id/btnRapidTap"
         android:layout_width="match_parent"
-        android:layout_height="48dp"
-        android:text="Quick Draw"/>
+        android:layout_height="wrap_content"
+        android:text="Rapid Tap"
+        android:layout_marginTop="16dp"/>
+
 </LinearLayout>
