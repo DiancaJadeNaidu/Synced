@@ -41,14 +41,10 @@ class RegisterActivity : AppCompatActivity() {
     }
 
     private fun selectAvatar(avatar: ImageView) {
-        // Remove previous highlight
         selectedAvatarView?.background = null
-
-        // Highlight current
         avatar.setBackgroundResource(R.drawable.selected_avatar_border)
         selectedAvatarView = avatar
 
-        // Save actual drawable ID
         selectedAvatarResId = when (avatar.id) {
             R.id.avatar1 -> R.drawable.ic_avatar1
             R.id.avatar2 -> R.drawable.ic_avatar2
@@ -84,7 +80,6 @@ class RegisterActivity : AppCompatActivity() {
                 return@setOnClickListener
             }
 
-            // Firebase registration
             auth.createUserWithEmailAndPassword(email, password)
                 .addOnCompleteListener { task ->
                     if (task.isSuccessful) {
@@ -99,7 +94,7 @@ class RegisterActivity : AppCompatActivity() {
                             .set(userMap)
                             .addOnSuccessListener {
                                 Toast.makeText(this, "Registration successful", Toast.LENGTH_SHORT).show()
-                                navigateToQuestionnaire()
+                                navigateAfterRegister()
                             }
                             .addOnFailureListener { e ->
                                 Toast.makeText(this, "Failed to save user info: ${e.message}", Toast.LENGTH_SHORT).show()
@@ -118,8 +113,28 @@ class RegisterActivity : AppCompatActivity() {
         }
     }
 
-    private fun navigateToQuestionnaire() {
-        startActivity(Intent(this, QuestionnaireActivity::class.java))
-        finish()
+    // 🔥 New logic same as Login
+    private fun navigateAfterRegister() {
+        val uid = auth.currentUser?.uid ?: return
+        val db = FirebaseFirestore.getInstance()
+
+        db.collection("users").document(uid).get().addOnSuccessListener { snapshot ->
+            if (snapshot.exists()) {
+                val hasDetails = snapshot.getString("birthday")?.isNotEmpty() == true &&
+                        snapshot.getString("gender")?.isNotEmpty() == true
+
+                if (hasDetails) {
+                    startActivity(Intent(this, ChoosingIntentActivity::class.java))
+                } else {
+                    startActivity(Intent(this, QuestionnaireActivity::class.java))
+                }
+                finish()
+            } else {
+                startActivity(Intent(this, QuestionnaireActivity::class.java))
+                finish()
+            }
+        }.addOnFailureListener {
+            Toast.makeText(this, "Error checking user details", Toast.LENGTH_SHORT).show()
+        }
     }
 }

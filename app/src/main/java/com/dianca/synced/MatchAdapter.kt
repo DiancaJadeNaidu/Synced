@@ -33,7 +33,10 @@ class MatchAdapter(
 
         holder.txtName.text = "${match.name}, ${match.age}"
         holder.txtBio.text = match.bio
-        holder.matchPercent.text = "${(80..100).random()}%\nmatch"
+        holder.matchPercent.text = "${match.percentage}%\nmatch"
+
+
+
 
         // Load avatar drawable safely using string name from Firebase
         val context = holder.itemView.context

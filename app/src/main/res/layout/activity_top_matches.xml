@@ -6,6 +6,7 @@
     android:orientation="vertical"
     android:padding="16dp">
 
+    <!-- Title -->
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -13,7 +14,7 @@
         android:textSize="22sp"
         android:textStyle="bold"
         android:textColor="@android:color/white"
-        android:layout_marginBottom="8dp"/>
+        android:layout_marginBottom="12dp"/>
 
     <!-- Filter bar -->
     <LinearLayout
@@ -21,9 +22,10 @@
         android:layout_height="wrap_content"
         android:orientation="horizontal"
         android:gravity="center_vertical"
-        android:layout_marginBottom="8dp"
-        android:weightSum="3">
+        android:layout_marginBottom="12dp"
+        android:weightSum="4">
 
+        <!-- Gender Filter -->
         <Spinner
             android:id="@+id/spinnerGender"
             android:layout_width="0dp"
@@ -33,23 +35,37 @@
             android:padding="8dp"
             android:backgroundTint="@android:color/white" />
 
-        <EditText
-            android:id="@+id/etLocation"
-            android:hint="Location"
+        <!-- Continent Filter -->
+        <Spinner
+            android:id="@+id/spinnerContinent"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:minHeight="48dp"
             android:layout_weight="1"
             android:padding="8dp"
-            android:inputType="text"
+            android:layout_marginStart="8dp"
             android:backgroundTint="@android:color/white" />
 
+        <!-- Country Filter -->
+        <Spinner
+            android:id="@+id/spinnerCountry"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:minHeight="48dp"
+            android:layout_weight="1"
+            android:padding="8dp"
+            android:layout_marginStart="8dp"
+            android:backgroundTint="@android:color/white" />
+
+        <!-- Refresh Button -->
         <Button
             android:id="@+id/btnRefresh"
             android:text="Refresh"
+            android:textSize="11dp"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_weight="1"/>
+            android:layout_weight="1"
+            android:layout_marginStart="8dp"/>
     </LinearLayout>
 
     <!-- Matches list -->
@@ -60,8 +76,10 @@
         android:layout_weight="1"
         android:scrollbars="vertical"/>
 
+    <!-- Progress bar for loading -->
     <ProgressBar
         android:id="@+id/progressBar"
+        style="?android:attr/progressBarStyleLarge"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:visibility="gone"

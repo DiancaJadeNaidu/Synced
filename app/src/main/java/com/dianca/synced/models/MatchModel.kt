@@ -9,5 +9,6 @@ data class MatchModel(
     val bio: String,
     val gender: String,
     val location: String,
-    val avatarName: String
+    val avatarName: String,
+    val percentage: Int = 0
 )

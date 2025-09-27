@@ -53,7 +53,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"/>
 
-            <!-- Chips -->
+            <!-- Chips row -->
             <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -79,11 +79,12 @@
                     android:gravity="center"
                     android:maxLines="2"
                     android:textColor="#8032CD32"
-                    android:background="@drawable/chip_like_bg" />
+                    android:background="@drawable/chip_like_bg"
+                    android:layout_marginStart="8dp"/>
             </LinearLayout>
         </LinearLayout>
 
-        <!-- Match % + Link -->
+        <!-- Match % + Profile Link -->
         <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
@@ -92,11 +93,12 @@
 
             <TextView
                 android:id="@+id/matchPercent"
-                android:text="  95%\nmatch"
+                android:text="95%\nmatch"
                 android:textStyle="bold"
                 android:textColor="@android:color/holo_green_dark"
                 android:textSize="18sp"
-                android:layout_marginBottom="4dp"
+                android:gravity="center"
+                android:layout_marginBottom="6dp"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"/>
 

@@ -18,6 +18,7 @@ import com.google.android.gms.auth.api.signin.GoogleSignInOptions
 import com.google.android.gms.common.api.ApiException
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.GoogleAuthProvider
+import com.google.firebase.firestore.FirebaseFirestore
 import java.util.Locale
 import java.util.concurrent.Executor
 
@@ -30,7 +31,6 @@ class LoginActivity : AppCompatActivity() {
     private lateinit var biometricPrompt: BiometricPrompt
     private lateinit var promptInfo: BiometricPrompt.PromptInfo
 
-    // prevent spinner from firing on first load
     private var isFirstLanguageSelection = true
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -50,8 +50,6 @@ class LoginActivity : AppCompatActivity() {
     // ----------------- LANGUAGE SWITCH -------------------
     private fun setupLanguageSpinner() {
         val spinner = binding.spinnerLanguage
-
-        // load from strings.xml
         val languages = resources.getStringArray(R.array.languages)
         val adapter = ArrayAdapter(this, android.R.layout.simple_spinner_item, languages)
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
@@ -66,13 +64,13 @@ class LoginActivity : AppCompatActivity() {
             ) {
                 if (isFirstLanguageSelection) {
                     isFirstLanguageSelection = false
-                    return  // skip first auto-call
+                    return
                 }
 
                 val langCode = when (position) {
-                    0 -> "en" // English
-                    1 -> "af" // Afrikaans
-                    2 -> "zu" // Zulu
+                    0 -> "en"
+                    1 -> "af"
+                    2 -> "zu"
                     else -> "en"
                 }
                 updateLanguage(langCode)
@@ -93,10 +91,8 @@ class LoginActivity : AppCompatActivity() {
         } else {
             config.locale = locale
         }
-
         resources.updateConfiguration(config, resources.displayMetrics)
 
-        // restart safely
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
             recreate()
         } else {
@@ -120,7 +116,7 @@ class LoginActivity : AppCompatActivity() {
             auth.signInWithEmailAndPassword(email, password)
                 .addOnCompleteListener(this) { task ->
                     if (task.isSuccessful) {
-                        navigateToQuestionnaire()
+                        navigateAfterLogin()
                     } else {
                         Toast.makeText(
                             this,
@@ -169,7 +165,7 @@ class LoginActivity : AppCompatActivity() {
         auth.signInWithCredential(credential)
             .addOnCompleteListener(this) { task ->
                 if (task.isSuccessful) {
-                    navigateToQuestionnaire()
+                    navigateAfterLogin()
                 } else {
                     Toast.makeText(this, "Google authentication failed", Toast.LENGTH_SHORT).show()
                 }
@@ -185,7 +181,7 @@ class LoginActivity : AppCompatActivity() {
                 override fun onAuthenticationSucceeded(result: BiometricPrompt.AuthenticationResult) {
                     super.onAuthenticationSucceeded(result)
                     Toast.makeText(applicationContext, "Biometric auth successful", Toast.LENGTH_SHORT).show()
-                    navigateToQuestionnaire()
+                    navigateAfterLogin()
                 }
 
                 override fun onAuthenticationFailed() {
@@ -204,8 +200,28 @@ class LoginActivity : AppCompatActivity() {
         binding.ivFace.setOnClickListener { biometricPrompt.authenticate(promptInfo) }
     }
 
-    private fun navigateToQuestionnaire() {
-        startActivity(Intent(this, QuestionnaireActivity::class.java))
-        finish()
+    // 🔥 New logic: check if questionnaire done
+    private fun navigateAfterLogin() {
+        val uid = auth.currentUser?.uid ?: return
+        val db = FirebaseFirestore.getInstance()
+
+        db.collection("users").document(uid).get().addOnSuccessListener { snapshot ->
+            if (snapshot.exists()) {
+                val hasDetails = snapshot.getString("birthday")?.isNotEmpty() == true &&
+                        snapshot.getString("gender")?.isNotEmpty() == true
+
+                if (hasDetails) {
+                    startActivity(Intent(this, ChoosingIntentActivity::class.java))
+                } else {
+                    startActivity(Intent(this, QuestionnaireActivity::class.java))
+                }
+                finish()
+            } else {
+                startActivity(Intent(this, QuestionnaireActivity::class.java))
+                finish()
+            }
+        }.addOnFailureListener {
+            Toast.makeText(this, "Error checking user details", Toast.LENGTH_SHORT).show()
+        }
     }
 }
