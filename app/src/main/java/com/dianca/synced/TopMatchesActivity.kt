@@ -46,9 +46,16 @@ class TopMatchesActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_top_matches)
+        // Buttons
         val btnViewRequests: Button = findViewById(R.id.btnViewRequests)
+        val btnViewFriends: Button = findViewById(R.id.btnViewFriends)
+
         btnViewRequests.setOnClickListener {
-            startActivity(Intent(this, RequestsActivity::class.java))
+            startActivity(Intent(this, SyncRequestsActivity::class.java))
+        }
+
+        btnViewFriends.setOnClickListener {
+            startActivity(Intent(this, SyncedFriendsActivity::class.java))
         }
 
         db = FirebaseFirestore.getInstance()

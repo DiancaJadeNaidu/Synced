@@ -1,6 +1,6 @@
 package com.dianca.synced
 
-data class Request(
+data class SyncRequest(
     var id: String = "",
     val senderId: String = "",
     val receiverId: String = "",

@@ -1,0 +1,44 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:padding="16dp"
+    android:background="@drawable/gradient_bg">
+
+    <TextView
+        android:id="@+id/tvFriendTitle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Play Games"
+        android:textSize="20sp"
+        android:textStyle="bold"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginBottom="24dp"/>
+
+    <Button
+        android:id="@+id/btnTicTacToe"
+        android:layout_width="match_parent"
+        android:layout_height="48dp"
+        android:text="Tic Tac Toe"
+        android:layout_marginBottom="12dp"/>
+
+    <Button
+        android:id="@+id/btnTrivia"
+        android:layout_width="match_parent"
+        android:layout_height="48dp"
+        android:text="Trivia Quiz"
+        android:layout_marginBottom="12dp"/>
+
+    <Button
+        android:id="@+id/btnEmojiMatch"
+        android:layout_width="match_parent"
+        android:layout_height="48dp"
+        android:text="Emoji Match"
+        android:layout_marginBottom="12dp"/>
+
+    <Button
+        android:id="@+id/btnQuickDraw"
+        android:layout_width="match_parent"
+        android:layout_height="48dp"
+        android:text="Quick Draw"/>
+</LinearLayout>

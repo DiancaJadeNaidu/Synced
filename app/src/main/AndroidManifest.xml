@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools">
+
     <uses-permission android:name="android.permission.INTERNET"/>
 
     <application
@@ -15,7 +16,7 @@
         tools:targetApi="34"
         tools:ignore="ExtraText">
 
-        <!-- MainActivity is the launcher and entry point -->
+        <!-- Main launcher -->
         <activity
             android:name=".MainActivity"
             android:exported="true">
@@ -24,6 +25,8 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
+        <!-- User auth & onboarding -->
         <activity android:name=".LoginActivity" />
         <activity android:name=".RegisterActivity" />
         <activity android:name=".RulesActivity" />
@@ -32,14 +35,17 @@
             android:name=".ChoosingIntentActivity"
             android:theme="@style/Theme.Synced.Fullscreen"/>
 
-        <!-- Matchmaking flow -->
+        <!-- Matchmaking & profiles -->
         <activity android:name=".TopMatchesActivity" />
         <activity android:name=".ViewProfileActivity" />
         <activity android:name=".SendMessageRequestActivity" />
         <activity android:name=".ProfileActivity" />
         <activity android:name=".SettingsActivity" />
-        <activity android:name=".RequestsActivity" />
 
+        <!-- Sync / friend requests -->
+        <activity android:name=".SyncRequestsActivity" />
+        <activity android:name=".SyncedFriendsActivity" />
+        <activity android:name=".FriendGamesActivity" />
 
 
     </application>

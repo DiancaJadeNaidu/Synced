@@ -9,13 +9,13 @@ import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 
-class RequestsAdapter(
-    private val requests: MutableList<Request>,
-    private val onAccept: (Request) -> Unit,
-    private val onDecline: (Request) -> Unit
-) : RecyclerView.Adapter<RequestsAdapter.RequestViewHolder>() {
+class SyncRequestsAdapter(
+    private val requests: MutableList<SyncRequest>,
+    private val onAccept: (SyncRequest) -> Unit,
+    private val onDecline: (SyncRequest) -> Unit
+) : RecyclerView.Adapter<SyncRequestsAdapter.SyncRequestViewHolder>() {
 
-    inner class RequestViewHolder(view: View) : RecyclerView.ViewHolder(view) {
+    inner class SyncRequestViewHolder(view: View) : RecyclerView.ViewHolder(view) {
         val tvName: TextView = view.findViewById(R.id.tvRequestName)
         val tvAge: TextView = view.findViewById(R.id.tvRequestAge)
         val ivProfilePic: ImageView = view.findViewById(R.id.ivProfilePic)
@@ -23,13 +23,13 @@ class RequestsAdapter(
         val btnDecline: Button = view.findViewById(R.id.btnDecline)
     }
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RequestViewHolder {
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): SyncRequestViewHolder {
         val view = LayoutInflater.from(parent.context)
             .inflate(R.layout.item_request, parent, false)
-        return RequestViewHolder(view)
+        return SyncRequestViewHolder(view)
     }
 
-    override fun onBindViewHolder(holder: RequestViewHolder, position: Int) {
+    override fun onBindViewHolder(holder: SyncRequestViewHolder, position: Int) {
         val request = requests[position]
         holder.tvName.text = request.senderName
         holder.tvAge.text = "${request.senderAge} yrs"
@@ -49,12 +49,11 @@ class RequestsAdapter(
 
     override fun getItemCount(): Int = requests.size
 
-    fun removeRequest(request: Request) {
+    fun removeRequest(request: SyncRequest) {
         val index = requests.indexOfFirst { it.id == request.id }
         if (index != -1) {
             requests.removeAt(index)
             notifyItemRemoved(index)
         }
     }
-
 }

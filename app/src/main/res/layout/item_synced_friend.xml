@@ -1,0 +1,41 @@
+<androidx.cardview.widget.CardView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_margin="8dp">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:padding="12dp">
+
+        <ImageView
+            android:id="@+id/ivFriendProfile"
+            android:layout_width="64dp"
+            android:layout_height="64dp"
+            android:scaleType="centerCrop"
+            android:src="@drawable/ic_avatar1"
+            android:background="@drawable/ic_profile"
+            android:clipToOutline="true" />
+
+        <TextView
+            android:id="@+id/tvFriendName"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="Friend Name"
+            android:textSize="18sp"
+            android:textStyle="bold"
+            android:layout_gravity="center_vertical"
+            android:layout_marginStart="12dp"/>
+
+        <Button
+            android:id="@+id/btnOpenFriend"
+            android:layout_width="wrap_content"
+            android:layout_height="36dp"
+            android:text="Open"
+            android:textSize="12sp"
+            android:padding="4dp"/>
+    </LinearLayout>
+</androidx.cardview.widget.CardView>
