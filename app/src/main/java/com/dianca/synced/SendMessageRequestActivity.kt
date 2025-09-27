@@ -34,7 +34,6 @@ class SendMessageRequestActivity : AppCompatActivity() {
         db = FirebaseFirestore.getInstance()
         auth = FirebaseAuth.getInstance()
 
-        // Get intent data from ViewProfileActivity
         toUserId = intent.getStringExtra("uid")
         toUserName = intent.getStringExtra("name")
         toUserImage = intent.getStringExtra("imageUrl")
@@ -52,16 +51,24 @@ class SendMessageRequestActivity : AppCompatActivity() {
     private fun sendRequest() {
         val currentUser = auth.currentUser ?: return
         val message = etMessage.text.toString().trim()
+        val recipientId = toUserId ?: return
 
-        val request = hashMapOf(
-            "fromUserId" to currentUser.uid,
-            "toUserId" to toUserId,
+        if (message.isEmpty()) {
+            Toast.makeText(this, "Please write a message", Toast.LENGTH_SHORT).show()
+            return
+        }
+
+        // Save request under recipient's document
+        val requestData = hashMapOf(
+            "fromId" to currentUser.uid,
+            "fromName" to (auth.currentUser?.displayName ?: "Someone"),
             "message" to message,
-            "status" to "pending",
             "timestamp" to Timestamp.now()
         )
 
-        db.collection("messageRequests").add(request)
+        db.collection("users").document(recipientId)
+            .collection("messageRequests")
+            .add(requestData)
             .addOnSuccessListener {
                 Toast.makeText(this, "Request sent ✅", Toast.LENGTH_SHORT).show()
                 finish()

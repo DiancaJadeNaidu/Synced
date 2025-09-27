@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools">
+    <uses-permission android:name="android.permission.INTERNET"/>
 
     <application
         android:allowBackup="true"
@@ -35,10 +36,10 @@
         <activity android:name=".TopMatchesActivity" />
         <activity android:name=".ViewProfileActivity" />
         <activity android:name=".SendMessageRequestActivity" />
-
         <activity android:name=".ProfileActivity" />
-
         <activity android:name=".SettingsActivity" />
+        <activity android:name=".RequestsActivity" />
+
 
 
     </application>

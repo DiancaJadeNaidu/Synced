@@ -1,9 +1,11 @@
 package com.dianca.synced
 
+import android.content.Intent
 import android.os.Bundle
 import android.widget.*
 import androidx.appcompat.app.AppCompatActivity
 import com.bumptech.glide.Glide
+import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import java.text.SimpleDateFormat
 import java.util.*
@@ -41,8 +43,31 @@ class ViewProfileActivity : AppCompatActivity() {
         loadUserProfile(userId!!)
 
         btnSendMessage.setOnClickListener {
-            Toast.makeText(this, "Message request sent ✅", Toast.LENGTH_SHORT).show()
+            val db = FirebaseFirestore.getInstance()
+            val currentUser = FirebaseAuth.getInstance().currentUser ?: return@setOnClickListener
+            val receiverId = intent.getStringExtra("uid") ?: return@setOnClickListener
+
+            // Unique ID for request
+            val requestId = "${currentUser.uid}_$receiverId"
+
+            val request = hashMapOf(
+                "id" to requestId,
+                "senderId" to currentUser.uid,
+                "receiverId" to receiverId,
+                "status" to "pending",
+                "timestamp" to com.google.firebase.Timestamp.now()
+            )
+
+            db.collection("requests").document(requestId).set(request)
+                .addOnSuccessListener {
+                    Toast.makeText(this, "Message request sent ✅", Toast.LENGTH_SHORT).show()
+                }
+                .addOnFailureListener { e ->
+                    Toast.makeText(this, "Failed to send: ${e.message}", Toast.LENGTH_SHORT).show()
+                }
         }
+
+
     }
 
     private fun calculateAge(birthdayStr: String): Int {

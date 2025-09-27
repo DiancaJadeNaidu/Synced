@@ -13,7 +13,6 @@ class RegisterActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityRegisterBinding
     private lateinit var auth: FirebaseAuth
-
     private var selectedAvatarResId: Int? = null
     private var selectedAvatarView: ImageView? = null
 
@@ -23,7 +22,6 @@ class RegisterActivity : AppCompatActivity() {
         setContentView(binding.root)
 
         auth = FirebaseAuth.getInstance()
-
         setupAvatarSelection()
         setupRegisterButton()
         setupLoginHint()
@@ -34,17 +32,13 @@ class RegisterActivity : AppCompatActivity() {
             binding.avatar1, binding.avatar2, binding.avatar3, binding.avatar4,
             binding.avatar5, binding.avatar6, binding.avatar7, binding.avatar8
         )
-
-        for (avatar in avatarViews) {
-            avatar.setOnClickListener { selectAvatar(avatar) }
-        }
+        for (avatar in avatarViews) avatar.setOnClickListener { selectAvatar(avatar) }
     }
 
     private fun selectAvatar(avatar: ImageView) {
         selectedAvatarView?.background = null
         avatar.setBackgroundResource(R.drawable.selected_avatar_border)
         selectedAvatarView = avatar
-
         selectedAvatarResId = when (avatar.id) {
             R.id.avatar1 -> R.drawable.ic_avatar1
             R.id.avatar2 -> R.drawable.ic_avatar2
@@ -64,6 +58,8 @@ class RegisterActivity : AppCompatActivity() {
             val password = binding.etPassword.text.toString()
             val confirmPassword = binding.etConfirmPassword.text.toString()
             val name = binding.etName.text.toString().trim()
+            val whatsapp = binding.etWhatsApp.text.toString().trim()
+            val instagram = binding.etInstagram.text.toString().trim()
 
             if (email.isEmpty() || password.isEmpty() || confirmPassword.isEmpty() || name.isEmpty()) {
                 Toast.makeText(this, "Please fill all fields", Toast.LENGTH_SHORT).show()
@@ -80,23 +76,28 @@ class RegisterActivity : AppCompatActivity() {
                 return@setOnClickListener
             }
 
+            val cleanWhatsapp = sanitizeWhatsapp(whatsapp)
+            if (cleanWhatsapp.length !in 9..15) {
+                Toast.makeText(this, "Please enter a valid WhatsApp number", Toast.LENGTH_SHORT).show()
+                return@setOnClickListener
+            }
+
             auth.createUserWithEmailAndPassword(email, password)
                 .addOnCompleteListener { task ->
                     if (task.isSuccessful) {
                         val uid = auth.currentUser?.uid ?: return@addOnCompleteListener
                         val userMap = hashMapOf(
                             "name" to name,
-                            "avatarId" to selectedAvatarResId
+                            "avatarId" to selectedAvatarResId,
+                            "whatsapp" to cleanWhatsapp,
+                            "instagram" to instagram
                         )
-                        FirebaseFirestore.getInstance()
-                            .collection("users")
-                            .document(uid)
-                            .set(userMap)
+                        FirebaseFirestore.getInstance().collection("users")
+                            .document(uid).set(userMap)
                             .addOnSuccessListener {
                                 Toast.makeText(this, "Registration successful", Toast.LENGTH_SHORT).show()
                                 navigateAfterRegister()
-                            }
-                            .addOnFailureListener { e ->
+                            }.addOnFailureListener { e ->
                                 Toast.makeText(this, "Failed to save user info: ${e.message}", Toast.LENGTH_SHORT).show()
                             }
                     } else {
@@ -106,6 +107,14 @@ class RegisterActivity : AppCompatActivity() {
         }
     }
 
+    // User-friendly sanitizer: handles +country code or local numbers
+    private fun sanitizeWhatsapp(input: String): String {
+        var number = input.replace("[^\\d+]".toRegex(), "") // remove spaces, dashes, parentheses
+        if (number.startsWith("+")) number = number.drop(1) // remove '+' for wa.me
+        else if (number.startsWith("0")) number = "27${number.drop(1)}" // assume South Africa if starts with 0
+        return number
+    }
+
     private fun setupLoginHint() {
         binding.tvLoginHint.setOnClickListener {
             startActivity(Intent(this, LoginActivity::class.java))
@@ -113,28 +122,27 @@ class RegisterActivity : AppCompatActivity() {
         }
     }
 
-    // 🔥 New logic same as Login
-    private fun navigateAfterRegister() {
-        val uid = auth.currentUser?.uid ?: return
-        val db = FirebaseFirestore.getInstance()
+        private fun navigateAfterRegister() {
+            val uid = auth.currentUser?.uid ?: return
+            val db = FirebaseFirestore.getInstance()
 
-        db.collection("users").document(uid).get().addOnSuccessListener { snapshot ->
-            if (snapshot.exists()) {
-                val hasDetails = snapshot.getString("birthday")?.isNotEmpty() == true &&
-                        snapshot.getString("gender")?.isNotEmpty() == true
+            db.collection("users").document(uid).get().addOnSuccessListener { snapshot ->
+                if (snapshot.exists()) {
+                    val hasDetails = snapshot.getString("birthday")?.isNotEmpty() == true &&
+                            snapshot.getString("gender")?.isNotEmpty() == true
 
-                if (hasDetails) {
-                    startActivity(Intent(this, ChoosingIntentActivity::class.java))
+                    if (hasDetails) {
+                        startActivity(Intent(this, ChoosingIntentActivity::class.java))
+                    } else {
+                        startActivity(Intent(this, QuestionnaireActivity::class.java))
+                    }
+                    finish()
                 } else {
                     startActivity(Intent(this, QuestionnaireActivity::class.java))
+                    finish()
                 }
-                finish()
-            } else {
-                startActivity(Intent(this, QuestionnaireActivity::class.java))
-                finish()
+            }.addOnFailureListener {
+                Toast.makeText(this, "Error checking user details", Toast.LENGTH_SHORT).show()
             }
-        }.addOnFailureListener {
-            Toast.makeText(this, "Error checking user details", Toast.LENGTH_SHORT).show()
         }
-    }
 }

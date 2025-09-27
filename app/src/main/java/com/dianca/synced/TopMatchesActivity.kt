@@ -46,6 +46,10 @@ class TopMatchesActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_top_matches)
+        val btnViewRequests: Button = findViewById(R.id.btnViewRequests)
+        btnViewRequests.setOnClickListener {
+            startActivity(Intent(this, RequestsActivity::class.java))
+        }
 
         db = FirebaseFirestore.getInstance()
         auth = FirebaseAuth.getInstance()
