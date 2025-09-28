@@ -1,7 +1,5 @@
 package com.dianca.synced.models
 
-import com.dianca.synced.R
-
 data class MatchModel(
     val uid: String,
     val name: String,
@@ -15,5 +13,6 @@ data class MatchModel(
     val food: String = "",
     val movieGenre: String = "",
     val favoriteColor: String = "",
-    val zodiacSign: String = ""      // <-- Added for zodiac compatibility
+    val zodiacSign: String = ""  ,
+    val intent: String = "Friendship"// <-- Added for zodiac compatibility
 )

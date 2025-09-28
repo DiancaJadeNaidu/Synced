@@ -42,8 +42,80 @@
                 android:id="@+id/spinnerLanguage"
                 android:layout_width="match_parent"
                 android:layout_height="48dp"
-                android:background="@drawable/rounded_white_card"
                 android:padding="8dp"/>
+        </LinearLayout>
+
+        <!-- Notifications Card -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:background="@drawable/rounded_white_card"
+            android:padding="20dp"
+            android:layout_marginBottom="24dp">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Notifications"
+                android:textSize="16sp"
+                android:textStyle="bold"
+                android:textColor="@color/dark_gray"
+                android:layout_marginBottom="12dp"/>
+
+            <Switch
+                android:id="@+id/switchMessages"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Message Notifications"/>
+
+            <Switch
+                android:id="@+id/switchMatches"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Match Notifications"/>
+
+            <Switch
+                android:id="@+id/switchFriendActivity"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Friend Activity Notifications"/>
+        </LinearLayout>
+
+        <!-- Block / Report Users Card -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:background="@drawable/rounded_white_card"
+            android:padding="20dp"
+            android:layout_marginBottom="24dp">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Community Actions"
+                android:textSize="16sp"
+                android:textStyle="bold"
+                android:textColor="@color/dark_gray"
+                android:layout_marginBottom="12dp"/>
+
+            <Button
+                android:id="@+id/btnViewRules"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="View Community Rules"
+                android:layout_marginBottom="12dp"
+                android:backgroundTint="@color/primary"
+                android:textColor="@android:color/white"/>
+
+            <Button
+                android:id="@+id/btnBlockReport"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Block / Report Users"
+                android:backgroundTint="@android:color/holo_red_dark"
+                android:textColor="@android:color/white"/>
         </LinearLayout>
 
         <!-- Account Card -->

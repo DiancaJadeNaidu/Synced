@@ -46,6 +46,7 @@ class TopMatchesActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_top_matches)
+
         // Buttons
         val btnViewRequests: Button = findViewById(R.id.btnViewRequests)
         val btnViewFriends: Button = findViewById(R.id.btnViewFriends)
@@ -123,6 +124,7 @@ class TopMatchesActivity : AppCompatActivity() {
 
         db.collection("users").document(firebaseUser.uid).get().addOnSuccessListener { doc ->
             if (doc.exists()) {
+                val intentValue = doc.getString("intent") ?: "Friendship"
                 currentUser = MatchModel(
                     uid = firebaseUser.uid,
                     name = doc.getString("name") ?: "Me",
@@ -136,7 +138,8 @@ class TopMatchesActivity : AppCompatActivity() {
                     food = doc.getString("food") ?: "",
                     movieGenre = doc.getString("movieGenre") ?: "",
                     favoriteColor = doc.getString("favoriteColor") ?: "",
-                    zodiacSign = doc.getString("zodiacSign") ?: ""
+                    zodiacSign = doc.getString("zodiacSign") ?: "",
+                    intent = intentValue
                 )
             }
             loadMatches()
@@ -151,6 +154,9 @@ class TopMatchesActivity : AppCompatActivity() {
             for (doc in result) {
                 val uid = doc.id
                 if (uid == firebaseUser.uid) continue
+
+                val matchIntent = doc.getString("intent") ?: "Friendship"
+                if (matchIntent != currentUser.intent) continue // <-- intent filter
 
                 val name = doc.getString("name") ?: "Anonymous"
                 val birthday = doc.getString("birthday") ?: ""
@@ -182,7 +188,8 @@ class TopMatchesActivity : AppCompatActivity() {
                     food = food,
                     movieGenre = movieGenre,
                     favoriteColor = favoriteColor,
-                    zodiacSign = zodiacSign
+                    zodiacSign = zodiacSign,
+                    intent = matchIntent
                 )
                 allMatches.add(match)
             }
@@ -293,7 +300,6 @@ class TopMatchesActivity : AppCompatActivity() {
             "Aquarius" to listOf("Gemini", "Libra", "Aries", "Sagittarius"),
             "Pisces" to listOf("Cancer", "Scorpio", "Taurus", "Capricorn")
         )
-
         return when {
             sign1 == sign2 -> 1.0
             compatiblePairs[sign1]?.contains(sign2) == true -> 0.8
