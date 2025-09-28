@@ -1,5 +1,6 @@
 package com.dianca.synced
 
+import android.annotation.SuppressLint
 import android.content.Intent
 import android.os.Bundle
 import android.widget.Button
@@ -11,6 +12,7 @@ class FriendGamesActivity : AppCompatActivity() {
     private var friendId: String? = null
     private var friendName: String? = null
 
+    @SuppressLint("MissingInflatedId")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_friend_games)
@@ -18,28 +20,32 @@ class FriendGamesActivity : AppCompatActivity() {
         friendId = intent.getStringExtra("friendId")
         friendName = intent.getStringExtra("friendName")
 
-        findViewById<TextView>(R.id.tvFriendTitle).text = "Play Games with $friendName"
+        findViewById<TextView>(R.id.tvFriendName).text = "Play Games with $friendName"
 
-        findViewById<Button>(R.id.btnHangman).setOnClickListener {
-            val intent = Intent(this, HangmanActivity::class.java)
+        findViewById<Button>(R.id.btnMemoryGame).setOnClickListener {
+            val intent = Intent(this, MemoryGameActivity::class.java)
+            intent.putExtra("friendId", friendId)
             intent.putExtra("friendName", friendName)
             startActivity(intent)
         }
 
         findViewById<Button>(R.id.btnTrivia).setOnClickListener {
             val intent = Intent(this, TriviaActivity::class.java)
+            intent.putExtra("friendId", friendId)
             intent.putExtra("friendName", friendName)
             startActivity(intent)
         }
 
-        findViewById<Button>(R.id.btnEmojiMatch).setOnClickListener {
-            val intent = Intent(this, EmojiMatchActivity::class.java)
+        findViewById<Button>(R.id.btnNumberGuess).setOnClickListener {
+            val intent = Intent(this, NumberGuessActivity::class.java)
+            intent.putExtra("friendId", friendId)
             intent.putExtra("friendName", friendName)
             startActivity(intent)
         }
 
-        findViewById<Button>(R.id.btnRapidTap).setOnClickListener {
-            val intent = Intent(this, RapidTapActivity::class.java)
+        findViewById<Button>(R.id.btnTicTacToe).setOnClickListener {
+            val intent = Intent(this, TicTacToeActivity::class.java)
+            intent.putExtra("friendId", friendId)
             intent.putExtra("friendName", friendName)
             startActivity(intent)
         }

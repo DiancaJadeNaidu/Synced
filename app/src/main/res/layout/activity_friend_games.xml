@@ -6,10 +6,10 @@
     android:background="@drawable/gradient_bg">
 
     <Button
-        android:id="@+id/btnHangman"
+        android:id="@+id/btnMemoryGame"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Hangman"
+        android:text="Memory Game"
         android:layout_marginTop="16dp"/>
 
     <Button
@@ -20,17 +20,17 @@
         android:layout_marginTop="16dp"/>
 
     <Button
-        android:id="@+id/btnEmojiMatch"
+        android:id="@+id/btnNumberGuess"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Emoji Match"
+        android:text="Number Guess"
         android:layout_marginTop="16dp"/>
 
     <Button
-        android:id="@+id/btnRapidTap"
+        android:id="@+id/btnTicTacToe"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Rapid Tap"
+        android:text="Tic Tac Toe"
         android:layout_marginTop="16dp"/>
 
 </LinearLayout>
