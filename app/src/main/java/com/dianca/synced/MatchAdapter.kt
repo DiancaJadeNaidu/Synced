@@ -105,27 +105,45 @@ class MatchAdapter(
 
         return traits
     }
-
     private fun getZodiacCompatibility(currentUser: MatchModel, match: MatchModel): Pair<Int, String> {
         val compatibleSigns = zodiacCompatibility[currentUser.zodiacSign] ?: emptyList()
         val description: String
+        val advice: String
 
         val percentage = when {
             compatibleSigns.take(2).contains(match.zodiacSign) -> {
-                description = "${match.zodiacSign} is highly compatible with ${currentUser.zodiacSign}"
-                90
+                description = "${match.zodiacSign} is highly compatible with ${currentUser.zodiacSign} 💖"
+                advice = when (currentUser.zodiacSign) {
+                    "Aries" -> "${match.name} will match your energy and boldness perfectly! Expect spontaneous adventures, laughter, and a fiery connection that keeps life exciting. ⚡🔥"
+                    "Taurus" -> "${match.name} brings stability and comfort, making cozy nights and shared goals a joy. You’ll savor life's pleasures together like a perfect duet of hearts. 🌿🍷"
+                    "Gemini" -> "${match.name} will keep up with your curiosity and love for variety! Endless conversations, jokes, and spontaneous ideas will keep you both on your toes. 🌀💬"
+                    "Cancer" -> "${match.name} understands your emotional depth. Expect nurturing, empathy, and long heartfelt talks. Together, you can create a safe, warm space. 🌊💞"
+                    "Leo" -> "${match.name} adores your confidence and joins your fun-loving energy. Expect compliments, playful rivalry, and shared moments in the spotlight. 🦁🌟"
+                    "Virgo" -> "${match.name} aligns with your attention to detail and practical mindset. Teamwork flows naturally, and everyday life becomes beautifully organized. 📝🌼"
+                    "Libra" -> "${match.name} balances your social nature and love for harmony. Expect romantic gestures, artful dates, and endless charm. 🎨💫"
+                    "Scorpio" -> "${match.name} matches your intensity and passion. Expect deep conversations, magnetic attraction, and emotional fireworks! 🔥🦂"
+                    "Sagittarius" -> "${match.name} shares your love for adventure! Spontaneous trips, laughter, and thrilling experiences await. 🌍🎒"
+                    "Capricorn" -> "${match.name} grounds your ambitions and helps you reach new heights. Together, you’ll build something solid, lasting, and meaningful. 🏔️💼"
+                    "Aquarius" -> "${match.name} sparks your originality and imagination! Expect quirky adventures, unique ideas, and endless inspiration. 🌌🤝"
+                    "Pisces" -> "${match.name} resonates with your intuition and emotional depth. Expect dreamy moments, creative synergy, and tender connection. 🌊🎨"
+                    else -> ""
+                }
+                95
             }
             compatibleSigns.drop(2).take(2).contains(match.zodiacSign) -> {
-                description = "${match.zodiacSign} is moderately compatible with ${currentUser.zodiacSign}"
-                70
+                description = "${match.zodiacSign} is moderately compatible with ${currentUser.zodiacSign} 🙂"
+                advice = "${match.name} shares some qualities that complement yours. You’ll have fun exploring differences, learning from each other, and creating memorable experiences together. Some sparks may require patience, but potential is definitely there! ✨"
+                75
             }
             else -> {
-                description = "${match.zodiacSign} has low compatibility with ${currentUser.zodiacSign}"
+                description = "${match.zodiacSign} has low compatibility with ${currentUser.zodiacSign} ⚡"
+                advice = "While ${match.name} might challenge you in unique ways, embracing those differences could lead to unexpected growth, fun, and unforgettable stories. Opposites can attract—get ready for surprises! 🎢🤔"
                 50
             }
         }
-        return Pair(percentage, description)
+        return Pair(percentage, "$description\n$advice")
     }
+
 
     private fun showListDialog(view: View, title: String, items: List<String>) {
         if (items.isEmpty()) {

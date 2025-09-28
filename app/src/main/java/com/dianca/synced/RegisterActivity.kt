@@ -132,7 +132,7 @@ class RegisterActivity : AppCompatActivity() {
                             snapshot.getString("gender")?.isNotEmpty() == true
 
                     if (hasDetails) {
-                        startActivity(Intent(this, ChoosingIntentActivity::class.java))
+                        startActivity(Intent(this, TopMatchesActivity::class.java))
                     } else {
                         startActivity(Intent(this, QuestionnaireActivity::class.java))
                     }
