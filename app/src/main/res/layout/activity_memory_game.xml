@@ -1,3 +1,4 @@
+<?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -6,6 +7,28 @@
     android:gravity="center_horizontal"
     android:padding="16dp">
 
+    <!-- Title -->
+    <TextView
+        android:id="@+id/tvGameTitle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Memory Match"
+        android:textSize="22sp"
+        android:textStyle="bold"
+        android:textColor="@android:color/black"
+        android:layout_marginBottom="12dp"/>
+
+    <!-- Competitive Scoreboard -->
+    <TextView
+        android:id="@+id/txtScoreboard"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="You: 0  Friend: 0"
+        android:textSize="18sp"
+        android:textColor="@android:color/black"
+        android:layout_marginBottom="16dp"/>
+
+    <!-- Score of current player -->
     <TextView
         android:id="@+id/txtScore"
         android:layout_width="wrap_content"
@@ -14,6 +37,7 @@
         android:textSize="20sp"
         android:layout_marginBottom="16dp"/>
 
+    <!-- Grid for cards -->
     <GridLayout
         android:id="@+id/gridLayoutMemory"
         android:layout_width="wrap_content"

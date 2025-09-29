@@ -6,82 +6,52 @@
     android:background="@drawable/gradient_bg"
     android:padding="16dp">
 
+    <!-- Scoreboard -->
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_marginBottom="16dp"
+        android:gravity="center">
+
+        <TextView
+            android:id="@+id/txtYourScore"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Your Score: 0"
+            android:textSize="18sp"
+            android:layout_marginEnd="20dp"/>
+
+        <TextView
+            android:id="@+id/txtFriendScore"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Friend Score: 0"
+            android:textSize="18sp"/>
+    </LinearLayout>
+
+    <!-- Status -->
     <TextView
         android:id="@+id/txtStatus"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Player X's Turn"
         android:textSize="20sp"
-        android:layout_marginBottom="20dp"/>
+        android:layout_marginBottom="16dp"/>
 
+    <!-- Game grid -->
     <GridLayout
         android:id="@+id/gridLayout"
         android:layout_width="300dp"
         android:layout_height="300dp"
         android:rowCount="3"
-        android:columnCount="3">
-        <Button
-            android:layout_width="100dp"
-            android:layout_height="100dp"
-            android:background="@color/white"
-            android:textColor="@color/black"
-            android:text="1" />
+        android:columnCount="3"
+        android:layout_marginBottom="16dp"/>
 
-        <Button
-            android:layout_width="100dp"
-            android:layout_height="100dp"
-            android:background="@color/white"
-            android:textColor="@color/black"
-            android:text="2" />
-
-        <Button
-            android:layout_width="100dp"
-            android:layout_height="100dp"
-            android:background="@color/white"
-            android:textColor="@color/black"
-            android:text="3" />
-
-        <Button
-            android:layout_width="100dp"
-            android:layout_height="100dp"
-            android:background="@color/white"
-            android:textColor="@color/black"
-            android:text="4" />
-
-        <Button
-            android:layout_width="100dp"
-            android:layout_height="100dp"
-            android:background="@color/white"
-            android:textColor="@color/black"
-            android:text="5" />
-
-        <Button
-            android:layout_width="100dp"
-            android:layout_height="100dp"
-            android:background="@color/white"
-            android:textColor="@color/black"
-            android:text="6" />
-
-        <Button
-            android:layout_width="100dp"
-            android:layout_height="100dp"
-            android:background="@color/white"
-            android:textColor="@color/black"
-            android:text="7" />
-
-        <Button
-            android:layout_width="100dp"
-            android:layout_height="100dp"
-            android:background="@color/white"
-            android:textColor="@color/black"
-            android:text="8" />
-
-        <Button
-            android:layout_width="100dp"
-            android:layout_height="100dp"
-            android:background="@color/white"
-            android:textColor="@color/black"
-            android:text="9" />
-
-    </GridLayout>
+    <!-- Restart button -->
+    <Button
+        android:id="@+id/btnRestart"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Restart Game"/>
 </LinearLayout>

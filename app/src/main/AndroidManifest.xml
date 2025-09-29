@@ -46,6 +46,14 @@
         <activity android:name=".SyncRequestsActivity" />
         <activity android:name=".SyncedFriendsActivity" />
         <activity android:name=".FriendGamesActivity" />
+        <activity android:name=".TicTacToeActivity" />
+        <activity android:name=".MemoryGameActivity" />
+        <activity android:name=".TriviaActivity" />
+        <activity android:name=".NumberGuessActivity" />
+
+
+
+
 
 
     </application>

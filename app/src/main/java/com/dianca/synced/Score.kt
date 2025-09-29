@@ -8,4 +8,3 @@ data class Score(
     var points: Int = 0,
     var timestamp: String? = null
 )
-

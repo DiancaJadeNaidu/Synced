@@ -5,43 +5,54 @@ import android.widget.Button
 import android.widget.GridLayout
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
-import com.dianca.synced.R
-import com.dianca.synced.ScoreManager
 import com.google.firebase.auth.FirebaseAuth
 
 class MemoryGameActivity : AppCompatActivity() {
 
     private lateinit var txtScore: TextView
+    private lateinit var txtScoreboard: TextView
     private lateinit var gridLayout: GridLayout
+
     private var score = 0
     private var flippedCards = mutableListOf<Button>()
-    private var cardValues = mutableListOf("🍎", "🍎", "🍌", "🍌", "🍇", "🍇", "🍒", "🍒")
+    private var cardValues = mutableListOf("🍎","🍎","🍌","🍌","🍇","🍇","🍒","🍒")
+
+    private lateinit var friendId: String
+    private lateinit var userId: String
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_memory_game)
 
         txtScore = findViewById(R.id.txtScore)
+        txtScoreboard = findViewById(R.id.txtScoreboard)
         gridLayout = findViewById(R.id.gridLayoutMemory)
+
+        // Get IDs
+        userId = FirebaseAuth.getInstance().currentUser?.uid ?: "guest"
+        friendId = intent.getStringExtra("friendId") ?: "unknown"
 
         // Shuffle cards
         cardValues.shuffle()
 
-        // Add buttons for each card
+        // Add buttons to Grid
         for (i in cardValues.indices) {
-            val button = Button(this)
-            button.text = "❓"
-            button.textSize = 24f
-            button.layoutParams = GridLayout.LayoutParams().apply {
-                width = 150
-                height = 150
-                marginStart = 8
-                topMargin = 8
+            val button = Button(this).apply {
+                text = "❓"
+                textSize = 24f
+                layoutParams = GridLayout.LayoutParams().apply {
+                    width = 150
+                    height = 150
+                    marginStart = 8
+                    topMargin = 8
+                }
+                setOnClickListener { flipCard(this, i) }
             }
-
-            button.setOnClickListener { flipCard(button, i) }
             gridLayout.addView(button)
         }
+
+        // Load competitive scores
+        loadScores()
     }
 
     private fun flipCard(button: Button, index: Int) {
@@ -54,7 +65,6 @@ class MemoryGameActivity : AppCompatActivity() {
             val first = flippedCards[0]
             val second = flippedCards[1]
 
-            // Delay check
             button.postDelayed({
                 if (first.text == second.text) {
                     score += 5
@@ -82,7 +92,16 @@ class MemoryGameActivity : AppCompatActivity() {
     }
 
     private fun saveScore(points: Int) {
-        val userId = FirebaseAuth.getInstance().currentUser?.uid ?: "guest"
-        ScoreManager.saveScore(userId, "friendId123", "MemoryMatch", points)
+        ScoreManager.saveScore(userId, friendId, "MemoryMatch", points)
+        // Refresh scoreboard after saving
+        loadScores()
+    }
+
+    private fun loadScores() {
+        ScoreManager.fetchFriendScores(friendId) { scores ->
+            val myScore = scores.filter { it.userId == userId }.maxByOrNull { it.points }?.points ?: 0
+            val friendScore = scores.filter { it.userId == friendId }.maxByOrNull { it.points }?.points ?: 0
+            txtScoreboard.text = "You: $myScore  Friend: $friendScore"
+        }
     }
 }

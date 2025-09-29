@@ -103,9 +103,6 @@ class SettingsActivity : AppCompatActivity() {
         switchFriendActivity.setOnCheckedChangeListener(listener)
     }
 
-    // -----------------------
-    // Community Actions: View rules, Block / Report
-    // -----------------------
     private fun setupCommunityActions() {
         btnViewRules.setOnClickListener {
             startActivity(Intent(this, RulesActivity::class.java))

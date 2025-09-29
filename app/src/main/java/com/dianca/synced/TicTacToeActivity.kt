@@ -5,29 +5,60 @@ import android.widget.Button
 import android.widget.GridLayout
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
-import com.dianca.synced.R
-import com.dianca.synced.ScoreManager
 import com.google.firebase.auth.FirebaseAuth
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 
 class TicTacToeActivity : AppCompatActivity() {
 
     private lateinit var statusText: TextView
+    private lateinit var yourScoreText: TextView
+    private lateinit var friendScoreText: TextView
     private lateinit var gridLayout: GridLayout
+    private lateinit var btnRestart: Button
+
     private var board = Array(9) { "" }
     private var currentPlayer = "X"
     private var gameActive = true
+    private var yourScore = 0
+    private var friendScore = 0
+
+    private lateinit var userId: String
+    private lateinit var friendId: String
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_tic_tac_toe)
 
         statusText = findViewById(R.id.txtStatus)
+        yourScoreText = findViewById(R.id.txtYourScore)
+        friendScoreText = findViewById(R.id.txtFriendScore)
         gridLayout = findViewById(R.id.gridLayout)
+        btnRestart = findViewById(R.id.btnRestart)
 
-        for (i in 0 until gridLayout.childCount) {
-            val button = gridLayout.getChildAt(i) as Button
+        userId = FirebaseAuth.getInstance().currentUser?.uid ?: "guest"
+        friendId = intent.getStringExtra("friendId") ?: "friend123"
+
+        // Setup grid buttons
+        for (i in 0 until 9) {
+            val button = Button(this).apply {
+                layoutParams = GridLayout.LayoutParams().apply {
+                    width = 100
+                    height = 100
+                    rowSpec = GridLayout.spec(i / 3, 1f)
+                    columnSpec = GridLayout.spec(i % 3, 1f)
+                    setMargins(4, 4, 4, 4)
+                }
+                textSize = 24f
+            }
             button.setOnClickListener { onCellClicked(i, button) }
+            gridLayout.addView(button)
         }
+
+        btnRestart.setOnClickListener { resetGame() }
+
+        fetchScores()
     }
 
     private fun onCellClicked(index: Int, button: Button) {
@@ -36,38 +67,65 @@ class TicTacToeActivity : AppCompatActivity() {
         board[index] = currentPlayer
         button.text = currentPlayer
 
-        if (checkWinner()) {
-            statusText.text = "$currentPlayer Wins!"
-            saveScore( if (currentPlayer == "X") 10 else 5 )
-            gameActive = false
-        } else if (board.all { it.isNotEmpty() }) {
-            statusText.text = "Draw!"
-            saveScore(3)
-            gameActive = false
-        } else {
-            currentPlayer = if (currentPlayer == "X") "O" else "X"
-            statusText.text = "Player $currentPlayer's Turn"
+        when {
+            checkWinner() -> {
+                val points = if (currentPlayer == "X") 10 else 5
+                statusText.text = "$currentPlayer Wins!"
+                gameActive = false
+                saveScore(points)
+            }
+            board.all { it.isNotEmpty() } -> {
+                statusText.text = "Draw!"
+                gameActive = false
+                saveScore(3)
+            }
+            else -> {
+                currentPlayer = if (currentPlayer == "X") "O" else "X"
+                statusText.text = "Player $currentPlayer's Turn"
+            }
         }
     }
 
     private fun checkWinner(): Boolean {
-        val winningPositions = arrayOf(
-            intArrayOf(0,1,2), intArrayOf(3,4,5), intArrayOf(6,7,8), // rows
-            intArrayOf(0,3,6), intArrayOf(1,4,7), intArrayOf(2,5,8), // cols
-            intArrayOf(0,4,8), intArrayOf(2,4,6) // diagonals
+        val wins = arrayOf(
+            intArrayOf(0,1,2), intArrayOf(3,4,5), intArrayOf(6,7,8),
+            intArrayOf(0,3,6), intArrayOf(1,4,7), intArrayOf(2,5,8),
+            intArrayOf(0,4,8), intArrayOf(2,4,6)
         )
-        for (pos in winningPositions) {
-            if (board[pos[0]] == currentPlayer &&
-                board[pos[1]] == currentPlayer &&
-                board[pos[2]] == currentPlayer) {
-                return true
-            }
+        return wins.any { line ->
+            board[line[0]] == currentPlayer &&
+                    board[line[1]] == currentPlayer &&
+                    board[line[2]] == currentPlayer
         }
-        return false
     }
 
     private fun saveScore(points: Int) {
-        val userId = FirebaseAuth.getInstance().currentUser?.uid ?: "guest"
-        ScoreManager.saveScore(userId, "friendId123", "TicTacToe", points)
+        CoroutineScope(Dispatchers.IO).launch {
+            ScoreManager.saveScore(userId, friendId, "TicTacToe", points)
+            fetchScores() // Update scoreboard after saving
+        }
+    }
+
+    private fun fetchScores() {
+        ScoreManager.fetchFriendScores(friendId) { scores ->
+            yourScore = scores.filter { it.userId == userId }.sumOf { it.points }
+            friendScore = scores.filter { it.userId == friendId }.sumOf { it.points }
+            runOnUiThread {
+                yourScoreText.text = "Your Score: $yourScore"
+                friendScoreText.text = "Friend Score: $friendScore"
+            }
+        }
+    }
+
+    private fun resetGame() {
+        board = Array(9) { "" }
+        currentPlayer = "X"
+        gameActive = true
+        statusText.text = "Player X's Turn"
+
+        for (i in 0 until gridLayout.childCount) {
+            val button = gridLayout.getChildAt(i) as Button
+            button.text = ""
+        }
     }
 }

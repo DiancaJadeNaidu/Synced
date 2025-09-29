@@ -3,36 +3,33 @@ package com.dianca.synced
 import android.os.Bundle
 import android.widget.*
 import androidx.appcompat.app.AppCompatActivity
-import com.dianca.synced.R
-import com.dianca.synced.ScoreManager
 import com.google.firebase.auth.FirebaseAuth
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 
 class TriviaActivity : AppCompatActivity() {
 
     private lateinit var txtQuestion: TextView
     private lateinit var radioGroup: RadioGroup
     private lateinit var btnSubmit: Button
-    private lateinit var txtScore: TextView
+    private lateinit var btnNext: Button
+    private lateinit var txtFeedback: TextView
+    private lateinit var txtYourScore: TextView
+    private lateinit var txtFriendScore: TextView
 
     private var currentQuestionIndex = 0
     private var score = 0
 
+    private lateinit var userId: String
+    private lateinit var friendId: String
+    private var friendScore = 0
+
     private val questions = listOf(
-        TriviaQuestion(
-            "What is the capital of South Africa?",
-            listOf("Cape Town", "Pretoria", "Johannesburg", "Durban"),
-            1
-        ),
-        TriviaQuestion(
-            "Which planet is known as the Red Planet?",
-            listOf("Earth", "Venus", "Mars", "Jupiter"),
-            2
-        ),
-        TriviaQuestion(
-            "Who wrote 'Romeo and Juliet'?",
-            listOf("Shakespeare", "Homer", "Dickens", "Tolstoy"),
-            0
-        )
+        TriviaQuestion("What is the capital of South Africa?", listOf("Cape Town", "Pretoria", "Johannesburg", "Durban"), 1),
+        TriviaQuestion("Which planet is known as the Red Planet?", listOf("Earth", "Venus", "Mars", "Jupiter"), 2),
+        TriviaQuestion("Who wrote 'Romeo and Juliet'?", listOf("Shakespeare", "Homer", "Dickens", "Tolstoy"), 0),
+        TriviaQuestion("What is the largest ocean?", listOf("Atlantic", "Indian", "Pacific", "Arctic"), 2)
     )
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -42,56 +39,88 @@ class TriviaActivity : AppCompatActivity() {
         txtQuestion = findViewById(R.id.txtQuestion)
         radioGroup = findViewById(R.id.radioGroup)
         btnSubmit = findViewById(R.id.btnSubmit)
-        txtScore = findViewById(R.id.txtScore)
+        btnNext = findViewById(R.id.btnNext)
+        txtFeedback = findViewById(R.id.txtFeedback)
+        txtYourScore = findViewById(R.id.txtYourScore)
+        txtFriendScore = findViewById(R.id.txtFriendScore)
+
+        userId = FirebaseAuth.getInstance().currentUser?.uid ?: "guest"
+        friendId = intent.getStringExtra("friendId") ?: "friend123"
 
         loadQuestion()
+        fetchScores()
 
-        btnSubmit.setOnClickListener {
-            val selectedId = radioGroup.checkedRadioButtonId
-            if (selectedId == -1) {
-                Toast.makeText(this, "Select an answer", Toast.LENGTH_SHORT).show()
-                return@setOnClickListener
-            }
-
-            val selectedIndex = radioGroup.indexOfChild(findViewById(selectedId))
-            if (selectedIndex == questions[currentQuestionIndex].correctAnswer) {
-                score += 10
-            }
-
-            currentQuestionIndex++
-
-            if (currentQuestionIndex < questions.size) {
-                loadQuestion()
-            } else {
-                endQuiz()
-            }
-        }
+        btnSubmit.setOnClickListener { submitAnswer() }
+        btnNext.setOnClickListener { nextQuestion() }
     }
 
     private fun loadQuestion() {
-        val question = questions[currentQuestionIndex]
-        txtQuestion.text = question.text
+        val q = questions[currentQuestionIndex]
+        txtQuestion.text = q.text
         radioGroup.removeAllViews()
+        txtFeedback.text = ""
+        btnNext.visibility = Button.GONE
 
-        for (option in question.options) {
-            val radioButton = RadioButton(this)
-            radioButton.text = option
-            radioGroup.addView(radioButton)
+        for (option in q.options) {
+            val rb = RadioButton(this)
+            rb.text = option
+            radioGroup.addView(rb)
         }
-
-        txtScore.text = "Score: $score"
     }
 
-    private fun endQuiz() {
-        txtQuestion.text = "🎉 Quiz complete! Final score: $score"
-        radioGroup.removeAllViews()
-        btnSubmit.isEnabled = false
+    private fun submitAnswer() {
+        val selectedId = radioGroup.checkedRadioButtonId
+        if (selectedId == -1) {
+            Toast.makeText(this, "Select an answer", Toast.LENGTH_SHORT).show()
+            return
+        }
+
+        val selectedIndex = radioGroup.indexOfChild(findViewById(selectedId))
+        val correct = questions[currentQuestionIndex].correctAnswer
+
+        if (selectedIndex == correct) {
+            score += 10
+            txtFeedback.text = "✅ Correct! +10 points"
+        } else {
+            txtFeedback.text = "❌ Wrong! Correct answer: ${questions[currentQuestionIndex].options[correct]}"
+        }
+
+        txtYourScore.text = "Your Score: $score"
         saveScore(score)
+
+        btnSubmit.visibility = Button.GONE
+        btnNext.visibility = Button.VISIBLE
+    }
+
+    private fun nextQuestion() {
+        currentQuestionIndex++
+        if (currentQuestionIndex < questions.size) {
+            loadQuestion()
+            btnSubmit.visibility = Button.VISIBLE
+            btnNext.visibility = Button.GONE
+        } else {
+            txtQuestion.text = "🎉 Quiz complete! Final score: $score"
+            radioGroup.removeAllViews()
+            btnSubmit.visibility = Button.GONE
+            btnNext.visibility = Button.GONE
+        }
+        fetchScores()
     }
 
     private fun saveScore(points: Int) {
-        val userId = FirebaseAuth.getInstance().currentUser?.uid ?: "guest"
-        ScoreManager.saveScore(userId, "friendId123", "Trivia", points)
+        CoroutineScope(Dispatchers.IO).launch {
+            ScoreManager.saveScore(userId, friendId, "Trivia", points)
+        }
+    }
+
+    private fun fetchScores() {
+        ScoreManager.fetchFriendScores(friendId) { scores ->
+            friendScore = scores.filter { it.userId == friendId }.sumOf { it.points }
+            runOnUiThread {
+                txtFriendScore.text = "Friend Score: $friendScore"
+                txtYourScore.text = "Your Score: $score"
+            }
+        }
     }
 }
 

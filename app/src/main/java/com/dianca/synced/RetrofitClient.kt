@@ -1,6 +1,5 @@
 package com.dianca.synced
 
-import com.dianca.synced.Score
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Response
@@ -22,7 +21,7 @@ interface ScoreApi {
 
 object RetrofitClient {
 
-    private const val BASE_URL = "https://syncedapi.onrender.com/" // Replace with Render URL
+    private const val BASE_URL = "https://syncedapi.onrender.com/"
 
     private val logging = HttpLoggingInterceptor().apply { level = HttpLoggingInterceptor.Level.BODY }
 

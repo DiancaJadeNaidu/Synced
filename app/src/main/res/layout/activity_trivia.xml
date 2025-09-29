@@ -3,16 +3,44 @@
     android:layout_height="match_parent"
     android:orientation="vertical"
     android:background="@drawable/gradient_bg"
-    android:padding="20dp">
+    android:padding="20dp"
+    android:gravity="center_horizontal">
 
+    <!-- Scoreboard -->
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_marginBottom="16dp"
+        android:gravity="center">
+
+        <TextView
+            android:id="@+id/txtYourScore"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Your Score: 0"
+            android:textSize="18sp"
+            android:layout_marginEnd="20dp"/>
+
+        <TextView
+            android:id="@+id/txtFriendScore"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Friend Score: 0"
+            android:textSize="18sp"/>
+    </LinearLayout>
+
+    <!-- Question -->
     <TextView
         android:id="@+id/txtQuestion"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Question will appear here"
         android:textSize="20sp"
-        android:layout_marginBottom="16dp" />
+        android:layout_marginBottom="16dp"
+        android:gravity="center"/>
 
+    <!-- Options -->
     <RadioGroup
         android:id="@+id/radioGroup"
         android:layout_width="match_parent"
@@ -24,12 +52,22 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Submit Answer"
-        android:layout_marginBottom="20dp" />
+        android:layout_marginBottom="16dp"/>
 
-    <TextView
-        android:id="@+id/txtScore"
+    <Button
+        android:id="@+id/btnNext"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Score: 0"
-        android:textSize="18sp" />
+        android:text="Next Question"
+        android:layout_marginBottom="20dp"
+        android:visibility="gone"/>
+
+    <TextView
+        android:id="@+id/txtFeedback"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text=""
+        android:textSize="18sp"
+        android:layout_marginBottom="16dp"/>
+
 </LinearLayout>

@@ -1,7 +1,5 @@
 package com.dianca.synced
 
-import com.dianca.synced.RetrofitClient
-import com.dianca.synced.Score
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -14,9 +12,15 @@ object ScoreManager {
         CoroutineScope(Dispatchers.IO).launch {
             try {
                 val response = RetrofitClient.instance.postScore(score)
-                if (response.isSuccessful) println("Score saved!")
-                else println("Error saving score: ${response.code()}")
+                if (response.isSuccessful) {
+                    println("✅ Score saved to DB: ${response.body()}")
+                } else {
+                    val error = response.errorBody()?.string()
+                    println("❌ Failed to save score: ${response.code()} - $error")
+                    println("Sent JSON: $score")
+                }
             } catch (e: Exception) {
+                println("🔥 Exception while saving score: ${e.message}")
                 e.printStackTrace()
             }
         }
