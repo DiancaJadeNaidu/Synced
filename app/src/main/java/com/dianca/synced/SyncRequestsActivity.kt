@@ -1,19 +1,18 @@
 package com.dianca.synced
 
 import android.content.Intent
-import android.net.Uri
 import android.os.Bundle
 import android.widget.Toast
-import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.widget.Toolbar
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.ktx.toObject
 import java.text.SimpleDateFormat
-import java.util.Calendar
-import java.util.Locale
+import java.util.*
 
 class SyncRequestsActivity : AppCompatActivity() {
 
@@ -27,6 +26,26 @@ class SyncRequestsActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_requests)
 
+        // Toolbar setup
+        val toolbar: Toolbar = findViewById(R.id.toolbarRequests)
+        setSupportActionBar(toolbar)
+        supportActionBar?.setDisplayHomeAsUpEnabled(true)
+        toolbar.setNavigationOnClickListener { finish() }
+
+        // Bottom Navigation
+        val bottomNav = findViewById<BottomNavigationView>(R.id.bottomNav)
+        bottomNav.setOnItemSelectedListener { item ->
+            when(item.itemId) {
+                R.id.nav_home -> startActivity(Intent(this, TopMatchesActivity::class.java))
+                R.id.nav_messages -> startActivity(Intent(this, SyncRequestsActivity::class.java))
+                R.id.nav_profile -> startActivity(Intent(this, ProfileActivity::class.java))
+                R.id.nav_settings -> startActivity(Intent(this, SettingsActivity::class.java))
+                R.id.nav_help -> startActivity(Intent(this, HelpActivity::class.java))
+            }
+            true
+        }
+
+        // RecyclerView setup
         rvRequests = findViewById(R.id.rvRequests)
         rvRequests.layoutManager = LinearLayoutManager(this)
 
@@ -83,12 +102,10 @@ class SyncRequestsActivity : AppCompatActivity() {
         }
     }
 
-
     private fun acceptRequest(request: SyncRequest) {
         db.collection("requests").document(request.id)
             .update("status", "accepted")
             .addOnSuccessListener {
-                // Add to synced list
                 val syncedData = hashMapOf(
                     "friendId" to request.senderId,
                     "name" to request.senderName,

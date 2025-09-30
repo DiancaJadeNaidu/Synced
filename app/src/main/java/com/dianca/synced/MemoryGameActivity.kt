@@ -1,17 +1,24 @@
 package com.dianca.synced
 
+import android.content.Intent
 import android.os.Bundle
 import android.widget.Button
 import android.widget.GridLayout
+import android.widget.ImageButton
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.widget.Toolbar
+import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.firebase.auth.FirebaseAuth
+
 
 class MemoryGameActivity : AppCompatActivity() {
 
     private lateinit var txtScore: TextView
     private lateinit var txtScoreboard: TextView
     private lateinit var gridLayout: GridLayout
+    private lateinit var btnBack: ImageButton
+    private lateinit var tvNavTitle: TextView
 
     private var score = 0
     private var flippedCards = mutableListOf<Button>()
@@ -20,9 +27,29 @@ class MemoryGameActivity : AppCompatActivity() {
     private lateinit var friendId: String
     private lateinit var userId: String
 
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_memory_game)
+
+        // Toolbar setup
+        val toolbar: Toolbar = findViewById(R.id.toolbarMemory)
+        setSupportActionBar(toolbar)
+        supportActionBar?.setDisplayHomeAsUpEnabled(true)
+        toolbar.setNavigationOnClickListener { finish() }
+
+        // Bottom Navigation
+        val bottomNav = findViewById<BottomNavigationView>(R.id.bottomNav)
+        bottomNav.setOnItemSelectedListener { item ->
+            when(item.itemId) {
+                R.id.nav_home -> startActivity(Intent(this, TopMatchesActivity::class.java))
+                R.id.nav_messages -> startActivity(Intent(this, SyncedFriendsActivity::class.java))
+                R.id.nav_profile -> startActivity(Intent(this, ProfileActivity::class.java))
+                R.id.nav_settings -> startActivity(Intent(this, SettingsActivity::class.java))
+                R.id.nav_help -> startActivity(Intent(this, HelpActivity::class.java))
+            }
+            true
+        }
 
         txtScore = findViewById(R.id.txtScore)
         txtScoreboard = findViewById(R.id.txtScoreboard)
@@ -93,7 +120,6 @@ class MemoryGameActivity : AppCompatActivity() {
 
     private fun saveScore(points: Int) {
         ScoreManager.saveScore(userId, friendId, "MemoryMatch", points)
-        // Refresh scoreboard after saving
         loadScores()
     }
 

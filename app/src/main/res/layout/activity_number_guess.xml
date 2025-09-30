@@ -1,69 +1,112 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
-    android:padding="20dp"
-    android:gravity="center_horizontal"
     android:background="@drawable/gradient_bg">
 
-    <!-- Game Title -->
-    <TextView
-        android:id="@+id/tvGameTitle"
-        android:layout_width="wrap_content"
+    <!-- Toolbar -->
+    <androidx.appcompat.widget.Toolbar
+        android:id="@+id/toolbarNumberGuess"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:text="🎯 Number Guess Challenge"
-        android:textSize="22sp"
-        android:textStyle="bold"
-        android:textColor="@android:color/black"
-        android:layout_marginBottom="12dp"/>
+        android:background="?attr/colorPrimary"
+        android:title="Number Guess"
+        android:titleTextColor="@android:color/white"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"/>
 
-    <!-- Competitive Scoreboard -->
-    <TextView
-        android:id="@+id/txtScoreboard"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="You: 0  Friend: 0"
-        android:textSize="18sp"
-        android:textColor="@android:color/black"
-        android:layout_marginBottom="16dp"/>
+    <!-- Main Content -->
+    <ScrollView
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:padding="20dp"
+        app:layout_constraintTop_toBottomOf="@id/toolbarNumberGuess"
+        app:layout_constraintBottom_toTopOf="@id/bottomNav"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent">
 
-    <!-- Feedback Text -->
-    <TextView
-        android:id="@+id/txtFeedback"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Guess a number between 1 and 100"
-        android:textSize="20sp"
-        android:layout_marginBottom="16dp"
-        android:textAlignment="center"/>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:gravity="center_horizontal">
 
-    <!-- User Guess Input -->
-    <EditText
-        android:id="@+id/edtGuess"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:hint="Enter your guess"
-        android:inputType="number"
-        android:layout_marginBottom="12dp"
-        android:background="@drawable/rule_bg_lightblue"
-        android:padding="12dp"/>
+            <!-- Game Title -->
+            <TextView
+                android:id="@+id/tvGameTitle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="🎯 Number Guess Challenge"
+                android:textSize="22sp"
+                android:textStyle="bold"
+                android:textColor="@android:color/black"
+                android:layout_marginBottom="12dp"/>
 
-    <!-- Submit Guess Button -->
-    <Button
-        android:id="@+id/btnGuess"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="🎯 Submit Guess"
-        android:layout_marginBottom="16dp"
-        android:backgroundTint="@color/teal_700"
-        android:textColor="@android:color/white"/>
+            <!-- Competitive Scoreboard -->
+            <TextView
+                android:id="@+id/txtScoreboard"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="You: 0  Friend: 0"
+                android:textSize="18sp"
+                android:textColor="@android:color/black"
+                android:layout_marginBottom="16dp"/>
 
-    <!-- Attempts Tracker -->
-    <TextView
-        android:id="@+id/txtAttempts"
-        android:layout_width="wrap_content"
+            <!-- Feedback Text -->
+            <TextView
+                android:id="@+id/txtFeedback"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Guess a number between 1 and 100"
+                android:textSize="20sp"
+                android:layout_marginBottom="16dp"
+                android:textAlignment="center"/>
+
+            <!-- User Guess Input -->
+            <EditText
+                android:id="@+id/edtGuess"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="Enter your guess"
+                android:inputType="number"
+                android:layout_marginBottom="12dp"
+                android:background="@drawable/rule_bg_lightblue"
+                android:padding="12dp"/>
+
+            <!-- Submit Guess Button -->
+            <Button
+                android:id="@+id/btnGuess"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="🎯 Submit Guess"
+                android:layout_marginBottom="16dp"
+                android:backgroundTint="@color/teal_700"
+                android:textColor="@android:color/white"/>
+
+            <!-- Attempts Tracker -->
+            <TextView
+                android:id="@+id/txtAttempts"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Attempts: 0/10"
+                android:textSize="18sp"/>
+        </LinearLayout>
+    </ScrollView>
+
+    <!-- Bottom Navigation -->
+    <com.google.android.material.bottomnavigation.BottomNavigationView
+        android:id="@+id/bottomNav"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:text="Attempts: 0/10"
-        android:textSize="18sp"/>
-</LinearLayout>
+        app:menu="@menu/bottom_nav_menu"
+        android:background="?android:attr/windowBackground"
+        app:itemIconTint="@color/white"
+        app:itemTextColor="@color/white"
+        app:labelVisibilityMode="labeled"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"/>
+</androidx.constraintlayout.widget.ConstraintLayout>

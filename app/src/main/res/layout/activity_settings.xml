@@ -1,148 +1,190 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@drawable/gradient_bg"
-    android:padding="24dp">
+    android:orientation="vertical"
+    android:background="@drawable/gradient_bg">
 
-    <LinearLayout
+    <!-- Toolbar -->
+    <androidx.appcompat.widget.Toolbar
+        android:id="@+id/toolbarSettings"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical">
+        android:background="@color/primary"
+        android:title="Settings"
+        android:titleTextColor="@android:color/white"
+        app:popupTheme="@style/ThemeOverlay.AppCompat.Light" />
 
-        <!-- Title -->
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Settings"
-            android:textSize="22sp"
-            android:textStyle="bold"
-            android:textColor="@android:color/white"
-            android:layout_marginBottom="24dp"/>
+    <!-- Scrollable content -->
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:padding="24dp">
 
-        <!-- Language Card -->
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:background="@drawable/rounded_white_card"
-            android:padding="20dp"
-            android:layout_marginBottom="24dp">
+            android:orientation="vertical">
 
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="App Language"
-                android:textSize="16sp"
-                android:textStyle="bold"
-                android:textColor="@color/dark_gray"
-                android:layout_marginBottom="12dp"/>
-
-            <Spinner
-                android:id="@+id/spinnerLanguage"
+            <!-- Language Card -->
+            <LinearLayout
+                android:id="@+id/cardLanguage"
                 android:layout_width="match_parent"
-                android:layout_height="48dp"
-                android:padding="8dp"/>
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:background="@color/blue"
+                android:padding="20dp"
+                android:layout_marginBottom="24dp"
+                android:clipToPadding="false"
+                android:clipChildren="false"
+                android:elevation="4dp"
+                android:radius="16dp">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="App Language"
+                    android:textSize="16sp"
+                    android:textStyle="bold"
+                    android:textColor="@android:color/white"
+                    android:layout_marginBottom="12dp"/>
+
+                <Spinner
+                    android:id="@+id/spinnerLanguage"
+                    android:layout_width="match_parent"
+                    android:layout_height="48dp"
+                    android:padding="8dp"/>
+            </LinearLayout>
+
+            <!-- Notifications Card -->
+            <LinearLayout
+                android:id="@+id/cardNotifications"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:background="@color/blue"
+                android:padding="20dp"
+                android:layout_marginBottom="24dp"
+                android:clipToPadding="false"
+                android:clipChildren="false"
+                android:elevation="4dp"
+                android:radius="16dp">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Notifications"
+                    android:textSize="16sp"
+                    android:textStyle="bold"
+                    android:textColor="@android:color/white"
+                    android:layout_marginBottom="12dp"/>
+
+                <Switch
+                    android:id="@+id/switchMessages"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Message Notifications"
+                    android:textColor="@android:color/white"/>
+
+                <Switch
+                    android:id="@+id/switchMatches"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Match Notifications"
+                    android:textColor="@android:color/white"/>
+
+                <Switch
+                    android:id="@+id/switchFriendActivity"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Friend Activity Notifications"
+                    android:textColor="@android:color/white"/>
+            </LinearLayout>
+
+            <!-- Community Actions Card -->
+            <LinearLayout
+                android:id="@+id/cardCommunity"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:background="@color/blue"
+                android:padding="20dp"
+                android:layout_marginBottom="24dp"
+                android:clipToPadding="false"
+                android:clipChildren="false"
+                android:elevation="4dp"
+                android:radius="16dp">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Community Actions"
+                    android:textSize="16sp"
+                    android:textStyle="bold"
+                    android:textColor="@android:color/white"
+                    android:layout_marginBottom="12dp"/>
+
+                <Button
+                    android:id="@+id/btnViewRules"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="View Community Rules"
+                    android:layout_marginBottom="12dp"
+                    android:backgroundTint="@color/primary"
+                    android:textColor="@android:color/white"/>
+
+                <Button
+                    android:id="@+id/btnBlockReport"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Block / Report Users"
+                    android:backgroundTint="@android:color/holo_red_dark"
+                    android:textColor="@android:color/white"/>
+            </LinearLayout>
+
+            <!-- Account Card -->
+            <LinearLayout
+                android:id="@+id/cardAccount"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:background="@color/blue"
+                android:padding="20dp"
+                android:clipToPadding="false"
+                android:clipChildren="false"
+                android:elevation="4dp"
+                android:radius="16dp">
+
+                <Button
+                    android:id="@+id/btnLogout"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Log Out"
+                    android:backgroundTint="@color/primary"
+                    android:textColor="@android:color/white"
+                    android:layout_marginBottom="12dp"/>
+
+                <Button
+                    android:id="@+id/btnDeleteAccount"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Delete Account"
+                    android:backgroundTint="@android:color/holo_red_dark"
+                    android:textColor="@android:color/white"/>
+            </LinearLayout>
+
         </LinearLayout>
+    </ScrollView>
 
-        <!-- Notifications Card -->
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:background="@drawable/rounded_white_card"
-            android:padding="20dp"
-            android:layout_marginBottom="24dp">
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Notifications"
-                android:textSize="16sp"
-                android:textStyle="bold"
-                android:textColor="@color/dark_gray"
-                android:layout_marginBottom="12dp"/>
-
-            <Switch
-                android:id="@+id/switchMessages"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="Message Notifications"/>
-
-            <Switch
-                android:id="@+id/switchMatches"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="Match Notifications"/>
-
-            <Switch
-                android:id="@+id/switchFriendActivity"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="Friend Activity Notifications"/>
-        </LinearLayout>
-
-        <!-- Block / Report Users Card -->
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:background="@drawable/rounded_white_card"
-            android:padding="20dp"
-            android:layout_marginBottom="24dp">
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Community Actions"
-                android:textSize="16sp"
-                android:textStyle="bold"
-                android:textColor="@color/dark_gray"
-                android:layout_marginBottom="12dp"/>
-
-            <Button
-                android:id="@+id/btnViewRules"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="View Community Rules"
-                android:layout_marginBottom="12dp"
-                android:backgroundTint="@color/primary"
-                android:textColor="@android:color/white"/>
-
-            <Button
-                android:id="@+id/btnBlockReport"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="Block / Report Users"
-                android:backgroundTint="@android:color/holo_red_dark"
-                android:textColor="@android:color/white"/>
-        </LinearLayout>
-
-        <!-- Account Card -->
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:background="@drawable/rounded_white_card"
-            android:padding="20dp">
-
-            <Button
-                android:id="@+id/btnLogout"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="Log Out"
-                android:backgroundTint="@color/primary"
-                android:textColor="@android:color/white"
-                android:layout_marginBottom="12dp"/>
-
-            <Button
-                android:id="@+id/btnDeleteAccount"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="Delete Account"
-                android:backgroundTint="@android:color/holo_red_dark"
-                android:textColor="@android:color/white"/>
-        </LinearLayout>
-
-    </LinearLayout>
-</ScrollView>
+    <!-- Bottom Navigation -->
+    <com.google.android.material.bottomnavigation.BottomNavigationView
+        android:id="@+id/bottomNav"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/white"
+        app:itemIconTint="@color/black"
+        app:itemTextColor="@color/black"
+        app:menu="@menu/bottom_nav_menu"/>
+</LinearLayout>

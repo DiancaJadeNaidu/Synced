@@ -1,47 +1,69 @@
-<?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    android:background="@drawable/gradient_bg"
-    android:gravity="center_horizontal"
-    android:padding="16dp">
+    android:background="@drawable/gradient_bg">
 
-    <!-- Title -->
-    <TextView
-        android:id="@+id/tvGameTitle"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Memory Match"
-        android:textSize="22sp"
-        android:textStyle="bold"
-        android:textColor="@android:color/black"
-        android:layout_marginBottom="12dp"/>
+    <!-- Top Navigation Bar -->
+    <androidx.appcompat.widget.Toolbar
+        android:id="@+id/toolbarMemory"
+        android:layout_width="match_parent"
+        android:layout_height="56dp"
+        android:background="?attr/colorPrimary"
+        android:elevation="4dp"
+        app:title="Memory Match 🧠"
+        app:titleTextColor="@android:color/black"
+        app:popupTheme="@style/ThemeOverlay.AppCompat.Light" />
 
-    <!-- Competitive Scoreboard -->
-    <TextView
-        android:id="@+id/txtScoreboard"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="You: 0  Friend: 0"
-        android:textSize="18sp"
-        android:textColor="@android:color/black"
-        android:layout_marginBottom="16dp"/>
+    <!-- Main Content -->
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:fillViewport="true">
 
-    <!-- Score of current player -->
-    <TextView
-        android:id="@+id/txtScore"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Score: 0"
-        android:textSize="20sp"
-        android:layout_marginBottom="16dp"/>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:gravity="center_horizontal"
+            android:padding="16dp">
 
-    <!-- Grid for cards -->
-    <GridLayout
-        android:id="@+id/gridLayoutMemory"
-        android:layout_width="wrap_content"
+            <TextView
+                android:id="@+id/txtScoreboard"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="You: 0  Friend: 0"
+                android:textSize="18sp"
+                android:textColor="@android:color/black"
+                android:layout_marginBottom="16dp"/>
+
+            <TextView
+                android:id="@+id/txtScore"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Score: 0"
+                android:textSize="20sp"
+                android:layout_marginBottom="16dp"/>
+
+            <GridLayout
+                android:id="@+id/gridLayoutMemory"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:rowCount="4"
+                android:columnCount="4"/>
+        </LinearLayout>
+    </ScrollView>
+
+    <!-- Bottom Navigation Bar -->
+    <com.google.android.material.bottomnavigation.BottomNavigationView
+        android:id="@+id/bottomNav"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:rowCount="4"
-        android:columnCount="4"/>
+        app:menu="@menu/bottom_nav_menu"
+        android:background="?android:attr/windowBackground"
+        app:itemIconTint="@color/white"
+        app:itemTextColor="@color/white"
+        app:labelVisibilityMode="labeled"/>
 </LinearLayout>

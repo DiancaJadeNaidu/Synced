@@ -4,10 +4,11 @@ import android.content.Intent
 import android.os.Bundle
 import android.widget.*
 import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.widget.Toolbar
 import com.bumptech.glide.Glide
+import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
-import com.google.firebase.firestore.SetOptions
 
 class ProfileActivity : AppCompatActivity() {
 
@@ -26,6 +27,25 @@ class ProfileActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_profile)
+
+        // Toolbar setup
+        val toolbar: Toolbar = findViewById(R.id.toolbarProfile)
+        setSupportActionBar(toolbar)
+        supportActionBar?.setDisplayHomeAsUpEnabled(true)
+        toolbar.setNavigationOnClickListener { finish() }
+
+        // Bottom Navigation
+        val bottomNav = findViewById<BottomNavigationView>(R.id.bottomNav)
+        bottomNav.setOnItemSelectedListener { item ->
+            when(item.itemId) {
+                R.id.nav_home -> startActivity(Intent(this, TopMatchesActivity::class.java))
+                R.id.nav_messages -> startActivity(Intent(this, SyncedFriendsActivity::class.java))
+                R.id.nav_profile -> startActivity(Intent(this, ProfileActivity::class.java))
+                R.id.nav_settings -> startActivity(Intent(this, SettingsActivity::class.java))
+                R.id.nav_help -> startActivity(Intent(this, HelpActivity::class.java))
+            }
+            true
+        }
 
         // Bind views
         imgProfile = findViewById(R.id.imgProfile)
@@ -82,7 +102,6 @@ class ProfileActivity : AppCompatActivity() {
                     val hobbies = (doc.get("hobbies") as? List<*>)?.joinToString(", ") ?: ""
                     val imageUrl = doc.getString("profileImageUrl")
 
-                    // Fill UI
                     txtNameAge.text = if (name.isNotEmpty() && age > 0) "$name, $age" else name
                     txtIntent.text = if (intent.isNotEmpty()) "Looking for: $intent" else ""
                     txtBio.text = if (bio.isNotEmpty()) "Bio: $bio" else ""

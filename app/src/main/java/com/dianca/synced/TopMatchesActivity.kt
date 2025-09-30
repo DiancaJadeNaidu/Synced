@@ -8,6 +8,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.dianca.synced.models.MatchModel
+import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import java.text.SimpleDateFormat
@@ -21,6 +22,7 @@ class TopMatchesActivity : AppCompatActivity() {
     private lateinit var progressBar: ProgressBar
     private lateinit var db: FirebaseFirestore
     private lateinit var auth: FirebaseAuth
+    private lateinit var bottomNav: BottomNavigationView
 
     private lateinit var genderSpinner: Spinner
     private lateinit var continentSpinner: Spinner
@@ -67,11 +69,41 @@ class TopMatchesActivity : AppCompatActivity() {
         genderSpinner = findViewById(R.id.spinnerGender)
         continentSpinner = findViewById(R.id.spinnerContinent)
         countrySpinner = findViewById(R.id.spinnerCountry)
+        bottomNav = findViewById(R.id.bottomNav)
 
         recyclerView.layoutManager = LinearLayoutManager(this)
 
         setupFilters()
+        setupBottomNav()
         loadCurrentUserAndMatches()
+    }
+
+    private fun setupBottomNav() {
+        bottomNav.setOnItemSelectedListener { item ->
+            when (item.itemId) {
+                R.id.nav_home -> {
+                    startActivity(Intent(this, TopMatchesActivity::class.java))
+                    true
+                }
+                R.id.nav_messages -> {
+                    startActivity(Intent(this, SyncedFriendsActivity::class.java))
+                    true
+                }
+                R.id.nav_profile -> {
+                    startActivity(Intent(this, ProfileActivity::class.java))
+                    true
+                }
+                R.id.nav_settings -> {
+                    startActivity(Intent(this, SettingsActivity::class.java))
+                    true
+                }
+                R.id.nav_help -> {
+                    startActivity(Intent(this, HelpActivity::class.java))
+                    true
+                }
+                else -> false
+            }
+        }
     }
 
     private fun setupFilters() {

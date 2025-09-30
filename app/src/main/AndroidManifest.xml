@@ -51,6 +51,8 @@
         <activity android:name=".TriviaActivity" />
         <activity android:name=".NumberGuessActivity" />
 
+        <activity android:name=".HelpActivity" />
+
 
 
 

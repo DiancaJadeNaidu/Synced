@@ -5,11 +5,16 @@ import android.os.Bundle
 import android.widget.*
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.widget.Toolbar
+import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import java.util.*
 
 class SettingsActivity : AppCompatActivity() {
+
+    private lateinit var toolbar: Toolbar
+    private lateinit var bottomNav: BottomNavigationView
 
     private lateinit var spinnerLanguage: Spinner
     private lateinit var switchMessages: Switch
@@ -28,6 +33,25 @@ class SettingsActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_settings)
+
+        // Toolbar
+        toolbar = findViewById(R.id.toolbarSettings)
+        setSupportActionBar(toolbar)
+        supportActionBar?.setDisplayHomeAsUpEnabled(true)
+        toolbar.setNavigationOnClickListener { finish() }
+
+        // Bottom Navigation
+        bottomNav = findViewById(R.id.bottomNav)
+        bottomNav.setOnItemSelectedListener { item ->
+            when (item.itemId) {
+                R.id.nav_home -> startActivity(Intent(this, TopMatchesActivity::class.java))
+                R.id.nav_messages -> startActivity(Intent(this, SyncRequestsActivity::class.java))
+                R.id.nav_profile -> startActivity(Intent(this, ProfileActivity::class.java))
+                R.id.nav_settings -> {} // Already here
+                R.id.nav_help -> startActivity(Intent(this, HelpActivity::class.java))
+            }
+            true
+        }
 
         // Bind views
         spinnerLanguage = findViewById(R.id.spinnerLanguage)
@@ -59,7 +83,9 @@ class SettingsActivity : AppCompatActivity() {
         )
 
         spinnerLanguage.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
-            override fun onItemSelected(parent: AdapterView<*>?, view: android.view.View?, position: Int, id: Long) {
+            override fun onItemSelected(
+                parent: AdapterView<*>?, view: android.view.View?, position: Int, id: Long
+            ) {
                 val selected = languages[position]
                 val locale = when (selected) {
                     "Zulu" -> Locale("zu")
@@ -72,6 +98,7 @@ class SettingsActivity : AppCompatActivity() {
                 resources.updateConfiguration(config, resources.displayMetrics)
                 Toast.makeText(this@SettingsActivity, "Language set to $selected", Toast.LENGTH_SHORT).show()
             }
+
             override fun onNothingSelected(parent: AdapterView<*>?) {}
         }
     }
@@ -80,8 +107,6 @@ class SettingsActivity : AppCompatActivity() {
     // Notifications
     // -----------------------
     private fun setupNotifications() {
-        val uid = auth.currentUser?.uid ?: return
-        // Load saved preferences for this session
         val prefs = getSharedPreferences("notifPrefs", MODE_PRIVATE)
         switchMessages.isChecked = prefs.getBoolean("messages", true)
         switchMatches.isChecked = prefs.getBoolean("matches", true)
@@ -103,13 +128,15 @@ class SettingsActivity : AppCompatActivity() {
         switchFriendActivity.setOnCheckedChangeListener(listener)
     }
 
+    // -----------------------
+    // Community Actions
+    // -----------------------
     private fun setupCommunityActions() {
         btnViewRules.setOnClickListener {
             startActivity(Intent(this, RulesActivity::class.java))
         }
 
         btnBlockReport.setOnClickListener {
-            // Fetch current synced friends
             val uid = auth.currentUser?.uid ?: return@setOnClickListener
             db.collection("users").document(uid)
                 .collection("synced")
@@ -171,7 +198,7 @@ class SettingsActivity : AppCompatActivity() {
     }
 
     // -----------------------
-    // Logout / Delete
+    // Logout / Delete Account
     // -----------------------
     private fun setupLogout() {
         btnLogout.setOnClickListener {

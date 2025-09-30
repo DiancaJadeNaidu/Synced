@@ -1,9 +1,12 @@
 package com.dianca.synced
 
+import android.content.Intent
 import android.os.Bundle
 import android.widget.*
 import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.widget.Toolbar
 import com.bumptech.glide.Glide
+import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.firebase.Timestamp
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
@@ -26,6 +29,26 @@ class SendMessageRequestActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_send_message_request)
 
+        // Toolbar setup
+        val toolbar: Toolbar = findViewById(R.id.toolbarSendMessage)
+        setSupportActionBar(toolbar)
+        supportActionBar?.setDisplayHomeAsUpEnabled(true)
+        toolbar.setNavigationOnClickListener { finish() }
+
+        // Bottom Navigation
+        val bottomNav = findViewById<BottomNavigationView>(R.id.bottomNav)
+        bottomNav.setOnItemSelectedListener { item ->
+            when (item.itemId) {
+                R.id.nav_home -> startActivity(Intent(this, TopMatchesActivity::class.java))
+                R.id.nav_messages -> startActivity(Intent(this, SyncRequestsActivity::class.java))
+                R.id.nav_profile -> startActivity(Intent(this, ProfileActivity::class.java))
+                R.id.nav_settings -> startActivity(Intent(this, SettingsActivity::class.java))
+                R.id.nav_help -> startActivity(Intent(this, HelpActivity::class.java))
+            }
+            true
+        }
+
+        // Bind views
         imgMatchAvatar = findViewById(R.id.imgMatchAvatar)
         txtMatchName = findViewById(R.id.txtMatchName)
         etMessage = findViewById(R.id.etMessage)
@@ -34,6 +57,7 @@ class SendMessageRequestActivity : AppCompatActivity() {
         db = FirebaseFirestore.getInstance()
         auth = FirebaseAuth.getInstance()
 
+        // Get recipient data from intent
         toUserId = intent.getStringExtra("uid")
         toUserName = intent.getStringExtra("name")
         toUserImage = intent.getStringExtra("imageUrl")
@@ -58,7 +82,6 @@ class SendMessageRequestActivity : AppCompatActivity() {
             return
         }
 
-        // Save request under recipient's document
         val requestData = hashMapOf(
             "fromId" to currentUser.uid,
             "fromName" to (auth.currentUser?.displayName ?: "Someone"),

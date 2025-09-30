@@ -1,20 +1,20 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical"
     android:background="@drawable/gradient_bg"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:orientation="vertical"
-    android:padding="16dp">
+    android:layout_height="match_parent">
 
     <!-- Title -->
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Top Matches"
+        android:text="🔥 Top Matches"
         android:textSize="22sp"
         android:textStyle="bold"
         android:textColor="@android:color/white"
-        android:layout_marginBottom="12dp"/>
+        android:layout_margin="16dp" />
 
     <!-- Filter bar -->
     <LinearLayout
@@ -22,6 +22,7 @@
         android:layout_height="wrap_content"
         android:orientation="horizontal"
         android:gravity="center_vertical"
+        android:layout_marginHorizontal="16dp"
         android:layout_marginBottom="12dp"
         android:weightSum="4">
 
@@ -57,7 +58,7 @@
         <Button
             android:id="@+id/btnRefresh"
             android:text="Refresh"
-            android:textSize="11dp"
+            android:textSize="11sp"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
@@ -68,13 +69,16 @@
         android:id="@+id/btnViewRequests"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Requests"/>
+        android:text="Requests"
+        android:layout_marginHorizontal="16dp"/>
 
     <Button
         android:id="@+id/btnViewFriends"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Friends"/>
+        android:text="Friends"
+        android:layout_marginHorizontal="16dp"
+        android:layout_marginBottom="8dp"/>
 
     <!-- Matches list -->
     <androidx.recyclerview.widget.RecyclerView
@@ -82,7 +86,8 @@
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="1"
-        android:scrollbars="vertical"/>
+        android:scrollbars="vertical"
+        android:padding="8dp"/>
 
     <!-- Progress bar for loading -->
     <ProgressBar
@@ -92,4 +97,16 @@
         android:layout_height="wrap_content"
         android:visibility="gone"
         android:layout_gravity="center"/>
+
+    <!-- Bottom Navigation Bar -->
+    <com.google.android.material.bottomnavigation.BottomNavigationView
+        android:id="@+id/bottomNav"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:menu="@menu/bottom_nav_menu"
+        android:background="?android:attr/windowBackground"
+        app:itemIconTint="@color/white"
+        app:itemTextColor="@color/white"
+        app:labelVisibilityMode="labeled" />
+
 </LinearLayout>
