@@ -24,13 +24,13 @@
 
             <!-- Profile Picture -->
             <ImageView
-                android:id="@+id/imgProfile"
-                android:layout_width="140dp"
-                android:layout_height="140dp"
-                android:scaleType="centerCrop"
-                android:src="@drawable/default_avatar_foreground"
-                android:background="@drawable/rounded_image_bg"
-                android:layout_marginBottom="16dp" />
+                android:id="@+id/zodiacIcon"
+                android:layout_width="56dp"
+                android:layout_height="56dp"
+                android:src="@drawable/ic_aries"
+                android:contentDescription="Zodiac Sign"
+                android:layout_gravity="center_vertical"
+                android:layout_marginEnd="12dp"/>
 
             <!-- Name + Age -->
             <TextView
