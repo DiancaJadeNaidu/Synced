@@ -45,6 +45,8 @@ class LoginActivity : AppCompatActivity() {
         setupGoogleLogin()
         setupBiometricLogin()
         setupLanguageSpinner()
+        setupForgotPassword()
+
     }
 
     // ----------------- LANGUAGE SWITCH -------------------
@@ -198,6 +200,25 @@ class LoginActivity : AppCompatActivity() {
 
         binding.ivFingerprint.setOnClickListener { biometricPrompt.authenticate(promptInfo) }
         binding.ivFace.setOnClickListener { biometricPrompt.authenticate(promptInfo) }
+    }
+    private fun setupForgotPassword() {
+        binding.tvForgotPassword.setOnClickListener {
+            val email = binding.etEmail.text.toString()
+
+            if (email.isEmpty()) {
+                Toast.makeText(this, "Please enter your email first", Toast.LENGTH_SHORT).show()
+                return@setOnClickListener
+            }
+
+            auth.sendPasswordResetEmail(email)
+                .addOnCompleteListener { task ->
+                    if (task.isSuccessful) {
+                        Toast.makeText(this, "Reset link sent to $email", Toast.LENGTH_SHORT).show()
+                    } else {
+                        Toast.makeText(this, "Error: ${task.exception?.message}", Toast.LENGTH_SHORT).show()
+                    }
+                }
+        }
     }
 
     // 🔥 New logic: check if questionnaire done

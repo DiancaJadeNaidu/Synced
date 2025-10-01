@@ -79,6 +79,21 @@
                     android:textColor="#333333"
                     android:inputType="textPassword"
                     android:padding="12dp" />
+                <!-- Forgot Password Link -->
+                <TextView
+                    android:id="@+id/tvForgotPassword"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="end"
+                    android:layout_marginBottom="16dp"
+                    android:text="Forgot Password?"
+                    android:textColor="#9A61FF"
+                    android:textSize="14sp"
+                    android:clickable="true"
+                    android:focusable="true"
+                    android:textStyle="bold"/>
+
+
 
                 <!-- Login Button -->
                 <Button
