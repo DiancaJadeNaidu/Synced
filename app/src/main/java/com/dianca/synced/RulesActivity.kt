@@ -14,6 +14,7 @@ class RulesActivity : AppCompatActivity() {
 
     private lateinit var checkAgree: CheckBox
     private lateinit var btnContinue: Button
+    private var fromSettings: Boolean = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -22,11 +23,13 @@ class RulesActivity : AppCompatActivity() {
         checkAgree = findViewById(R.id.checkAgree)
         btnContinue = findViewById(R.id.btnContinue)
 
-        // Set initial checkbox color
+        // Detect flow
+        fromSettings = intent.getBooleanExtra("fromSettings", false)
+
+        // Initial checkbox color
         checkAgree.buttonTintList =
             ContextCompat.getColorStateList(this, android.R.color.darker_gray)
 
-        // Highlight checkbox when checked
         checkAgree.setOnCheckedChangeListener { _, isChecked ->
             val color = if (isChecked) R.color.purple_700 else android.R.color.darker_gray
             checkAgree.buttonTintList = ContextCompat.getColorStateList(this, color)
@@ -34,18 +37,18 @@ class RulesActivity : AppCompatActivity() {
 
         btnContinue.setOnClickListener {
             if (!checkAgree.isChecked) {
-                // Shake animation for the checkbox
+                // Shake animation
                 val shake = TranslateAnimation(0f, 25f, 0f, 0f)
                 shake.duration = 300
                 shake.repeatMode = Animation.REVERSE
                 shake.repeatCount = 3
                 checkAgree.startAnimation(shake)
 
-                // Highlight checkbox in red
+                // Highlight checkbox in red temporarily
                 checkAgree.buttonTintList =
                     ContextCompat.getColorStateList(this, android.R.color.holo_red_dark)
 
-                // Temporarily show tick
+                // Temporarily tick checkbox
                 checkAgree.isChecked = true
                 checkAgree.postDelayed({
                     checkAgree.isChecked = false
@@ -53,16 +56,20 @@ class RulesActivity : AppCompatActivity() {
                         ContextCompat.getColorStateList(this, android.R.color.darker_gray)
                 }, 500)
 
-                // Inform user
                 Toast.makeText(
                     this,
                     "You must accept the terms to continue",
                     Toast.LENGTH_SHORT
                 ).show()
             } else {
-                // Proceed to login
-                startActivity(Intent(this, LoginActivity::class.java))
-                finish()
+                if (fromSettings) {
+                    // Go back to Settings
+                    finish()
+                } else {
+                    // Normal app flow → go to Login
+                    startActivity(Intent(this, LoginActivity::class.java))
+                    finish()
+                }
             }
         }
     }

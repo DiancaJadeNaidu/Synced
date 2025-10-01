@@ -5,6 +5,23 @@
     android:orientation="vertical"
     android:background="@drawable/gradient_bg">
 
+    <!-- Spacer to prevent overlap with status bar -->
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="24dp" />
+
+    <!-- Heading -->
+    <TextView
+        android:id="@+id/tvMemoryHeading"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Memory Game"
+        android:textSize="24sp"
+        android:textStyle="bold"
+        android:textColor="@android:color/black"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginBottom="16dp"/>
+
     <!-- Main Content -->
     <ScrollView
         android:layout_width="match_parent"

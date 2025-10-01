@@ -127,7 +127,9 @@ class SettingsActivity : AppCompatActivity() {
     // -----------------------
     private fun setupCommunityActions() {
         btnViewRules.setOnClickListener {
-            startActivity(Intent(this, RulesActivity::class.java))
+            val intent = Intent(this, RulesActivity::class.java)
+            intent.putExtra("fromSettings", true) // flag to indicate rules opened from settings
+            startActivity(intent)
         }
 
         btnBlockReport.setOnClickListener {
