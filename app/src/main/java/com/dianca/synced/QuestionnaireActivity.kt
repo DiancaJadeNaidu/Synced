@@ -45,6 +45,8 @@ class QuestionnaireActivity : AppCompatActivity() {
     private lateinit var orangeButton: Button
     private lateinit var blueButton: Button
 
+    private var editMode: Boolean = false
+
     private var selectedColor: String? = null
     private var selectedAvatarId: Int = R.drawable.default_avatar_foreground
 
@@ -63,8 +65,20 @@ class QuestionnaireActivity : AppCompatActivity() {
 
         auth = FirebaseAuth.getInstance()
         db = FirebaseFirestore.getInstance()
+        editMode = intent.getBooleanExtra("EXTRA_EDIT_MODE", false)
 
-        // Bind views
+        bindViews()
+        setupSpinners()
+        setupBirthdayPicker()
+        setupColorButtons()
+        loadProfile()
+
+        completeProfileButton.setOnClickListener {
+            if (isProfileComplete()) saveProfile()
+        }
+    }
+
+    private fun bindViews() {
         genderRadioGroup = findViewById(R.id.genderRadioGroup)
         birthdayInput = findViewById(R.id.birthdayInput)
         zodiacSpinner = findViewById(R.id.zodiacSpinner)
@@ -94,17 +108,9 @@ class QuestionnaireActivity : AppCompatActivity() {
         greenButton = findViewById(R.id.greenButton)
         orangeButton = findViewById(R.id.orangeButton)
         blueButton = findViewById(R.id.blueButton)
+    }
 
-        // Birthday picker
-        birthdayInput.setOnClickListener {
-            val c = Calendar.getInstance()
-            val dpd = DatePickerDialog(this, { _, y, m, d ->
-                birthdayInput.setText(String.format("%02d/%02d/%04d", m + 1, d, y))
-            }, c.get(Calendar.YEAR), c.get(Calendar.MONTH), c.get(Calendar.DAY_OF_MONTH))
-            dpd.show()
-        }
-
-        // Populate spinners
+    private fun setupSpinners() {
         zodiacSpinner.adapter = ArrayAdapter(
             this, android.R.layout.simple_spinner_item,
             listOf("Aries","Taurus","Gemini","Cancer","Leo","Virgo","Libra","Scorpio","Sagittarius","Capricorn","Aquarius","Pisces")
@@ -147,7 +153,18 @@ class QuestionnaireActivity : AppCompatActivity() {
             this, android.R.layout.simple_spinner_item,
             listOf("Pizza","Burgers","Sushi","Pasta","Salad","Other")
         ).apply { setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item) }
+    }
 
+    private fun setupBirthdayPicker() {
+        birthdayInput.setOnClickListener {
+            val c = Calendar.getInstance()
+            DatePickerDialog(this, { _, y, m, d ->
+                birthdayInput.setText(String.format("%02d/%02d/%04d", m + 1, d, y))
+            }, c.get(Calendar.YEAR), c.get(Calendar.MONTH), c.get(Calendar.DAY_OF_MONTH)).show()
+        }
+    }
+
+    private fun setupColorButtons() {
         listOf(redButton, greenButton, orangeButton, blueButton).forEach { btn ->
             btn.setOnClickListener {
                 selectedColor = btn.contentDescription.toString()
@@ -161,10 +178,26 @@ class QuestionnaireActivity : AppCompatActivity() {
                 Toast.makeText(this, "Selected color: $selectedColor", Toast.LENGTH_SHORT).show()
             }
         }
+    }
 
-        loadProfile()
+    private fun collectHobbies(): List<String> {
+        val hobbies = mutableListOf<String>()
+        if (fitnessCheck.isChecked) hobbies.add("Fitness")
+        if (musicCheck.isChecked) hobbies.add("Music")
+        if (artCheck.isChecked) hobbies.add("Art")
+        if (cookingCheck.isChecked) hobbies.add("Cooking")
+        if (travelCheck.isChecked) hobbies.add("Travel")
+        if (gamingCheck.isChecked) hobbies.add("Gaming")
+        if (readingCheck.isChecked) hobbies.add("Reading")
+        if (sportsCheck.isChecked) hobbies.add("Sports")
+        if (dancingCheck.isChecked) hobbies.add("Dancing")
+        if (photographyCheck.isChecked) hobbies.add("Photography")
+        if (otherCheck.isChecked) hobbies.add("Other")
+        return hobbies
+    }
 
-        completeProfileButton.setOnClickListener { saveProfile() }
+    private fun selectedGenderIsEmpty(): Boolean {
+        return genderRadioGroup.checkedRadioButtonId == -1
     }
 
     private fun calculateAge(birthdayStr: String): Int {
@@ -179,32 +212,61 @@ class QuestionnaireActivity : AppCompatActivity() {
         } catch (e: Exception) { 0 }
     }
 
+    private fun isProfileComplete(): Boolean {
+        val birthdayStr = birthdayInput.text.toString().trim()
+        val age = calculateAge(birthdayStr)
+
+        if (selectedGenderIsEmpty()) {
+            Toast.makeText(this, "Please select a gender", Toast.LENGTH_SHORT).show()
+            return false
+        }
+        if (birthdayStr.isEmpty()) {
+            Toast.makeText(this, "Please enter your birthday", Toast.LENGTH_SHORT).show()
+            return false
+        }
+        if (age < 18) {
+            Toast.makeText(this, "You must be at least 18 years old to complete your profile", Toast.LENGTH_LONG).show()
+            return false
+        }
+        if (zodiacSpinner.selectedItem == null ||
+            siblingSpinner.selectedItem == null ||
+            continentSpinner.selectedItem == null ||
+            countrySpinner.selectedItem == null ||
+            movieSpinner.selectedItem == null ||
+            religionSpinner.selectedItem == null ||
+            foodSpinner.selectedItem == null ||
+            outgoingSeekBar.progress == 0 ||
+            petRadioGroup.checkedRadioButtonId == -1
+        ) {
+            Toast.makeText(this, "Please fill out all required fields", Toast.LENGTH_SHORT).show()
+            return false
+        }
+        if (collectHobbies().isEmpty()) {
+            Toast.makeText(this, "Please select at least one hobby", Toast.LENGTH_SHORT).show()
+            return false
+        }
+        if (selectedColor == null) {
+            Toast.makeText(this, "Please select a favorite color", Toast.LENGTH_SHORT).show()
+            return false
+        }
+
+        return true
+    }
+
     private fun saveProfile() {
         val uid = auth.currentUser?.uid ?: return
         val user = auth.currentUser
+
         val selectedGenderId = genderRadioGroup.checkedRadioButtonId
         val selectedGender = if (selectedGenderId != -1) findViewById<RadioButton>(selectedGenderId).text.toString() else null
+
         val selectedPetId = petRadioGroup.checkedRadioButtonId
         val selectedPet = if (selectedPetId != -1) findViewById<RadioButton>(selectedPetId).text.toString() else null
-
-        val hobbies = mutableListOf<String>()
-        if (fitnessCheck.isChecked) hobbies.add("Fitness")
-        if (musicCheck.isChecked) hobbies.add("Music")
-        if (artCheck.isChecked) hobbies.add("Art")
-        if (cookingCheck.isChecked) hobbies.add("Cooking")
-        if (travelCheck.isChecked) hobbies.add("Travel")
-        if (gamingCheck.isChecked) hobbies.add("Gaming")
-        if (readingCheck.isChecked) hobbies.add("Reading")
-        if (sportsCheck.isChecked) hobbies.add("Sports")
-        if (dancingCheck.isChecked) hobbies.add("Dancing")
-        if (photographyCheck.isChecked) hobbies.add("Photography")
-        if (otherCheck.isChecked) hobbies.add("Other")
 
         val birthdayStr = birthdayInput.text.toString()
         val age = calculateAge(birthdayStr)
 
         val userData = hashMapOf(
-           // "name" to (user?.displayName ?: "Unknown"),
             "email" to (user?.email ?: ""),
             "birthday" to birthdayStr,
             "age" to age,
@@ -217,17 +279,17 @@ class QuestionnaireActivity : AppCompatActivity() {
             "food" to foodSpinner.selectedItem.toString(),
             "outgoingLevel" to outgoingSeekBar.progress,
             "petPreference" to selectedPet,
-            "hobbies" to hobbies,
+            "hobbies" to collectHobbies(),
             "favoriteColor" to selectedColor,
-           // "avatarId" to selectedAvatarId,
             "gender" to selectedGender
         )
 
         db.collection("users").document(uid)
             .set(userData, SetOptions.merge())
             .addOnSuccessListener {
-                Toast.makeText(this, "Profile completed!", Toast.LENGTH_SHORT).show()
-                startActivity(Intent(this, ChoosingIntentActivity::class.java))
+                Toast.makeText(this, "Profile saved!", Toast.LENGTH_SHORT).show()
+                val nextActivity = if (editMode) ProfileActivity::class.java else ChoosingIntentActivity::class.java
+                startActivity(Intent(this, nextActivity))
                 finish()
             }
             .addOnFailureListener { e ->
