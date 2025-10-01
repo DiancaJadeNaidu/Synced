@@ -17,7 +17,7 @@ class FriendGamesActivity : AppCompatActivity() {
         val friendId = intent.getStringExtra("friendId") ?: ""
         val friendName = intent.getStringExtra("friendName") ?: "Friend"
 
-        // Title text
+        // Title text (below toolbar)
         val tvFriendTitle = findViewById<TextView>(R.id.tvFriendTitle)
         tvFriendTitle.text = "Play Games with $friendName"
 

@@ -34,12 +34,6 @@ class SettingsActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_settings)
 
-        // Toolbar
-        toolbar = findViewById(R.id.toolbarSettings)
-        setSupportActionBar(toolbar)
-        supportActionBar?.setDisplayHomeAsUpEnabled(true)
-        toolbar.setNavigationOnClickListener { finish() }
-
         // Bottom Navigation
         bottomNav = findViewById(R.id.bottomNav)
         bottomNav.setOnItemSelectedListener { item ->

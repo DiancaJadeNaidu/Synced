@@ -15,10 +15,10 @@
         android:textSize="22sp"
         android:textStyle="bold"
         android:textColor="@android:color/black"
+        android:layout_marginTop="16dp"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        android:layout_marginTop="16dp"/>
+        app:layout_constraintEnd_toEndOf="parent"/>
 
     <!-- Card Container -->
     <androidx.cardview.widget.CardView
@@ -47,11 +47,11 @@
             <LinearLayout
                 android:id="@+id/btnMemoryGame"
                 android:layout_width="0dp"
-                android:layout_height="wrap_content"
+                android:layout_height="0dp"
                 android:layout_row="0"
-                android:layout_rowWeight="1"
                 android:layout_column="0"
                 android:layout_columnWeight="1"
+                android:layout_rowWeight="1"
                 android:layout_margin="8dp"
                 android:gravity="center"
                 android:orientation="vertical"
@@ -80,11 +80,11 @@
             <LinearLayout
                 android:id="@+id/btnTrivia"
                 android:layout_width="0dp"
-                android:layout_height="wrap_content"
+                android:layout_height="0dp"
                 android:layout_row="0"
-                android:layout_rowWeight="1"
                 android:layout_column="1"
                 android:layout_columnWeight="1"
+                android:layout_rowWeight="1"
                 android:layout_margin="8dp"
                 android:gravity="center"
                 android:orientation="vertical"
@@ -113,11 +113,11 @@
             <LinearLayout
                 android:id="@+id/btnNumberGuess"
                 android:layout_width="0dp"
-                android:layout_height="wrap_content"
+                android:layout_height="0dp"
                 android:layout_row="1"
-                android:layout_rowWeight="1"
                 android:layout_column="0"
                 android:layout_columnWeight="1"
+                android:layout_rowWeight="1"
                 android:layout_margin="8dp"
                 android:gravity="center"
                 android:orientation="vertical"
@@ -146,11 +146,11 @@
             <LinearLayout
                 android:id="@+id/btnTicTacToe"
                 android:layout_width="0dp"
-                android:layout_height="wrap_content"
+                android:layout_height="0dp"
                 android:layout_row="1"
-                android:layout_rowWeight="1"
                 android:layout_column="1"
                 android:layout_columnWeight="1"
+                android:layout_rowWeight="1"
                 android:layout_margin="8dp"
                 android:gravity="center"
                 android:orientation="vertical"
@@ -176,21 +176,17 @@
             </LinearLayout>
 
         </GridLayout>
-
     </androidx.cardview.widget.CardView>
 
-    <!-- ✅ Bottom Navigation -->
+    <!-- Bottom Navigation -->
     <com.google.android.material.bottomnavigation.BottomNavigationView
         android:id="@+id/bottomNav"
-        android:layout_width="0dp"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         app:menu="@menu/bottom_nav_menu"
         android:background="?android:attr/windowBackground"
         app:itemIconTint="@color/white"
         app:itemTextColor="@color/white"
         app:labelVisibilityMode="labeled"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"/>
-
+        app:layout_constraintBottom_toBottomOf="parent"/>
 </androidx.constraintlayout.widget.ConstraintLayout>

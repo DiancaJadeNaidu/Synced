@@ -5,17 +5,6 @@
     android:orientation="vertical"
     android:background="@drawable/gradient_bg">
 
-    <!-- Top Navigation Bar -->
-    <androidx.appcompat.widget.Toolbar
-        android:id="@+id/toolbarMemory"
-        android:layout_width="match_parent"
-        android:layout_height="56dp"
-        android:background="?attr/colorPrimary"
-        android:elevation="4dp"
-        app:title="Memory Match 🧠"
-        app:titleTextColor="@android:color/black"
-        app:popupTheme="@style/ThemeOverlay.AppCompat.Light" />
-
     <!-- Main Content -->
     <ScrollView
         android:layout_width="match_parent"
@@ -65,5 +54,5 @@
         android:background="?android:attr/windowBackground"
         app:itemIconTint="@color/white"
         app:itemTextColor="@color/white"
-        app:labelVisibilityMode="labeled"/>
+        app:labelVisibilityMode="labeled" />
 </LinearLayout>

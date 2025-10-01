@@ -28,19 +28,13 @@ class ProfileActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_profile)
 
-        // Toolbar setup
-        val toolbar: Toolbar = findViewById(R.id.toolbarProfile)
-        setSupportActionBar(toolbar)
-        supportActionBar?.setDisplayHomeAsUpEnabled(true)
-        toolbar.setNavigationOnClickListener { finish() }
-
         // Bottom Navigation
         val bottomNav = findViewById<BottomNavigationView>(R.id.bottomNav)
         bottomNav.setOnItemSelectedListener { item ->
             when(item.itemId) {
                 R.id.nav_home -> startActivity(Intent(this, TopMatchesActivity::class.java))
                 R.id.nav_messages -> startActivity(Intent(this, SyncedFriendsActivity::class.java))
-                R.id.nav_profile -> startActivity(Intent(this, ProfileActivity::class.java))
+                R.id.nav_profile -> {}
                 R.id.nav_settings -> startActivity(Intent(this, SettingsActivity::class.java))
                 R.id.nav_help -> startActivity(Intent(this, HelpActivity::class.java))
             }

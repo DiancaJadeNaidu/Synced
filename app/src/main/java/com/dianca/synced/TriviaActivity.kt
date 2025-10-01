@@ -1,8 +1,11 @@
 package com.dianca.synced
 
+import android.content.Intent
 import android.os.Bundle
 import android.widget.*
 import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.widget.Toolbar
+import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.firebase.auth.FirebaseAuth
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -17,13 +20,15 @@ class TriviaActivity : AppCompatActivity() {
     private lateinit var txtFeedback: TextView
     private lateinit var txtYourScore: TextView
     private lateinit var txtFriendScore: TextView
+    private lateinit var bottomNav: BottomNavigationView
+    private lateinit var toolbar: androidx.appcompat.widget.Toolbar
 
     private var currentQuestionIndex = 0
     private var score = 0
+    private var friendScore = 0
 
     private lateinit var userId: String
     private lateinit var friendId: String
-    private var friendScore = 0
 
     private val questions = listOf(
         TriviaQuestion("What is the capital of South Africa?", listOf("Cape Town", "Pretoria", "Johannesburg", "Durban"), 1),
@@ -36,6 +41,8 @@ class TriviaActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_trivia)
 
+
+        // Initialize views
         txtQuestion = findViewById(R.id.txtQuestion)
         radioGroup = findViewById(R.id.radioGroup)
         btnSubmit = findViewById(R.id.btnSubmit)
@@ -43,6 +50,7 @@ class TriviaActivity : AppCompatActivity() {
         txtFeedback = findViewById(R.id.txtFeedback)
         txtYourScore = findViewById(R.id.txtYourScore)
         txtFriendScore = findViewById(R.id.txtFriendScore)
+        bottomNav = findViewById(R.id.bottomNav)
 
         userId = FirebaseAuth.getInstance().currentUser?.uid ?: "guest"
         friendId = intent.getStringExtra("friendId") ?: "friend123"
@@ -52,6 +60,18 @@ class TriviaActivity : AppCompatActivity() {
 
         btnSubmit.setOnClickListener { submitAnswer() }
         btnNext.setOnClickListener { nextQuestion() }
+
+        // Bottom navigation listener
+        bottomNav.setOnItemSelectedListener { item ->
+            when (item.itemId) {
+                R.id.nav_home -> { startActivity(Intent(this, MainActivity::class.java)); true }
+                R.id.nav_messages -> { startActivity(Intent(this, SyncedFriendsActivity::class.java)); true }
+                R.id.nav_profile -> { startActivity(Intent(this, ProfileActivity::class.java)); true }
+                R.id.nav_settings -> { startActivity(Intent(this, SettingsActivity::class.java)); true }
+                R.id.nav_help -> { startActivity(Intent(this, HelpActivity::class.java)); true }
+                else -> false
+            }
+        }
     }
 
     private fun loadQuestion() {

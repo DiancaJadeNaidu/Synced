@@ -1,12 +1,11 @@
 package com.dianca.synced
 
+import android.content.Intent
 import android.os.Bundle
-import android.widget.Button
-import android.widget.EditText
-import android.widget.LinearLayout
-import android.widget.TextView
+import android.widget.*
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.setPadding
+import com.google.android.material.bottomnavigation.BottomNavigationView
 
 class HelpActivity : AppCompatActivity() {
 
@@ -17,11 +16,13 @@ class HelpActivity : AppCompatActivity() {
     private lateinit var quickHelp3: TextView
     private lateinit var quickHelp4: TextView
     private lateinit var quickHelpContainer: LinearLayout
+    private lateinit var bottomNav: BottomNavigationView
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_help)
 
+        // --- Init views ---
         inputEditText = findViewById(R.id.inputEditText)
         sendButton = findViewById(R.id.sendButton)
         quickHelp1 = findViewById(R.id.quickHelp1)
@@ -29,14 +30,28 @@ class HelpActivity : AppCompatActivity() {
         quickHelp3 = findViewById(R.id.quickHelp3)
         quickHelp4 = findViewById(R.id.quickHelp4)
         quickHelpContainer = findViewById(R.id.quickHelpContainer)
+        bottomNav = findViewById(R.id.bottomNav)
 
-        // Quick help taps → simulate typing that question
+        // --- Bottom Nav ---
+        val bottomNav = findViewById<BottomNavigationView>(R.id.bottomNav)
+        bottomNav.setOnItemSelectedListener { item ->
+            when(item.itemId) {
+                R.id.nav_home -> startActivity(Intent(this, TopMatchesActivity::class.java))
+                R.id.nav_messages -> startActivity(Intent(this, SyncedFriendsActivity::class.java))
+                R.id.nav_profile -> startActivity(Intent(this, ProfileActivity::class.java))
+                R.id.nav_settings -> startActivity(Intent(this, SettingsActivity::class.java))
+                R.id.nav_help -> {}
+            }
+            true
+        }
+
+        // --- Quick help options ---
         quickHelp1.setOnClickListener { showAnswer("intent") }
         quickHelp2.setOnClickListener { showAnswer("matching") }
         quickHelp3.setOnClickListener { showAnswer("report") }
         quickHelp4.setOnClickListener { showAnswer("privacy") }
 
-        // Send button → analyze user input
+        // --- Send button ---
         sendButton.setOnClickListener {
             val query = inputEditText.text.toString().trim()
             if (query.isNotEmpty()) {
@@ -57,7 +72,6 @@ class HelpActivity : AppCompatActivity() {
             else -> "I couldn’t find a specific answer for that. Please check settings or contact support."
         }
 
-        // Add answer to quickHelpContainer dynamically
         val responseView = TextView(this).apply {
             text = "🤖 $answer"
             textSize = 16f

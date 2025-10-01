@@ -1,10 +1,14 @@
 package com.dianca.synced
 
+import android.content.Intent
 import android.os.Bundle
 import android.widget.Button
 import android.widget.GridLayout
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.widget.Toolbar
+import com.google.android.material.appbar.MaterialToolbar
+import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.firebase.auth.FirebaseAuth
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -17,6 +21,9 @@ class TicTacToeActivity : AppCompatActivity() {
     private lateinit var friendScoreText: TextView
     private lateinit var gridLayout: GridLayout
     private lateinit var btnRestart: Button
+
+    private lateinit var toolbar: MaterialToolbar
+    private lateinit var bottomNav: BottomNavigationView
 
     private var board = Array(9) { "" }
     private var currentPlayer = "X"
@@ -31,14 +38,38 @@ class TicTacToeActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_tic_tac_toe)
 
+        // Bind views
         statusText = findViewById(R.id.txtStatus)
         yourScoreText = findViewById(R.id.txtYourScore)
         friendScoreText = findViewById(R.id.txtFriendScore)
         gridLayout = findViewById(R.id.gridLayout)
         btnRestart = findViewById(R.id.btnRestart)
 
+        bottomNav = findViewById(R.id.bottomNav)
+
         userId = FirebaseAuth.getInstance().currentUser?.uid ?: "guest"
         friendId = intent.getStringExtra("friendId") ?: "friend123"
+
+
+
+        // Setup bottom navigation
+        bottomNav.setOnItemSelectedListener { item ->
+            when (item.itemId) {
+                R.id.nav_home -> {
+                    startActivity(Intent(this, MainActivity::class.java))
+                    true
+                }
+                R.id.nav_messages -> {
+                    startActivity(Intent(this, SyncedFriendsActivity::class.java))
+                    true
+                }
+                R.id.nav_settings -> {
+                    startActivity(Intent(this, SettingsActivity::class.java))
+                    true
+                }
+                else -> false
+            }
+        }
 
         // Setup grid buttons
         for (i in 0 until 9) {
@@ -88,9 +119,9 @@ class TicTacToeActivity : AppCompatActivity() {
 
     private fun checkWinner(): Boolean {
         val wins = arrayOf(
-            intArrayOf(0,1,2), intArrayOf(3,4,5), intArrayOf(6,7,8),
-            intArrayOf(0,3,6), intArrayOf(1,4,7), intArrayOf(2,5,8),
-            intArrayOf(0,4,8), intArrayOf(2,4,6)
+            intArrayOf(0, 1, 2), intArrayOf(3, 4, 5), intArrayOf(6, 7, 8),
+            intArrayOf(0, 3, 6), intArrayOf(1, 4, 7), intArrayOf(2, 5, 8),
+            intArrayOf(0, 4, 8), intArrayOf(2, 4, 6)
         )
         return wins.any { line ->
             board[line[0]] == currentPlayer &&
@@ -102,7 +133,7 @@ class TicTacToeActivity : AppCompatActivity() {
     private fun saveScore(points: Int) {
         CoroutineScope(Dispatchers.IO).launch {
             ScoreManager.saveScore(userId, friendId, "TicTacToe", points)
-            fetchScores() // Update scoreboard after saving
+            fetchScores()
         }
     }
 

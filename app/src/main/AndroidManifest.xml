@@ -38,7 +38,6 @@
         <!-- Matchmaking & profiles -->
         <activity android:name=".TopMatchesActivity" />
         <activity android:name=".ViewProfileActivity" />
-        <activity android:name=".SendMessageRequestActivity" />
         <activity android:name=".ProfileActivity" />
         <activity android:name=".SettingsActivity" />
 
