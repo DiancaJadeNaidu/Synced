@@ -17,7 +17,7 @@ class FriendGamesActivity : AppCompatActivity() {
         val friendId = intent.getStringExtra("friendId") ?: ""
         val friendName = intent.getStringExtra("friendName") ?: "Friend"
 
-        // Title text (below toolbar)
+        // Title text
         val tvFriendTitle = findViewById<TextView>(R.id.tvFriendTitle)
         tvFriendTitle.text = "Play Games with $friendName"
 
@@ -55,7 +55,7 @@ class FriendGamesActivity : AppCompatActivity() {
             startActivity(i)
         }
 
-        // ✅ Bottom Nav setup
+        //Bottom Nav setup
         val bottomNav = findViewById<BottomNavigationView>(R.id.bottomNav)
         bottomNav.setOnItemSelectedListener { item ->
             when (item.itemId) {

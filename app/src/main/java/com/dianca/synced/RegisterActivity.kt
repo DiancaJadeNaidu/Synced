@@ -36,8 +36,13 @@ class RegisterActivity : AppCompatActivity() {
     }
 
     private fun selectAvatar(avatar: ImageView) {
+        // Reset previous selection
         selectedAvatarView?.background = null
+
+        // Apply highlight to new one
         avatar.setBackgroundResource(R.drawable.selected_avatar_border)
+
+        // Track current selection
         selectedAvatarView = avatar
         selectedAvatarResId = when (avatar.id) {
             R.id.avatar1 -> R.drawable.ic_avatar1
@@ -51,6 +56,7 @@ class RegisterActivity : AppCompatActivity() {
             else -> R.drawable.default_avatar_foreground
         }
     }
+
 
     private fun setupRegisterButton() {
         binding.btnRegister.setOnClickListener {

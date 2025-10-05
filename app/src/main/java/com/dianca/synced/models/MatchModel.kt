@@ -14,5 +14,5 @@ data class MatchModel(
     val movieGenre: String = "",
     val favoriteColor: String = "",
     val zodiacSign: String = ""  ,
-    val intent: String = "Friendship"// <-- Added for zodiac compatibility
+    val intent: String = "Friendship"
 )

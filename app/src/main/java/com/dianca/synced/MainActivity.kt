@@ -27,7 +27,7 @@ class MainActivity : AppCompatActivity() {
         if (isGranted) {
             Toast.makeText(this, "Notifications enabled!", Toast.LENGTH_SHORT).show()
         } else {
-            Toast.makeText(this, "Notifications not allowed", Toast.LENGTH_SHORT).show()
+            Toast.makeText(this, "Notifications allowed", Toast.LENGTH_SHORT).show()
         }
         goToRules()
     }
@@ -60,7 +60,6 @@ class MainActivity : AppCompatActivity() {
                     this,
                     Manifest.permission.POST_NOTIFICATIONS
                 ) -> {
-                    // Optional: Show rationale dialog before requesting
                     Toast.makeText(this, "Please allow notifications to stay connected", Toast.LENGTH_LONG).show()
                     requestPermissionLauncher.launch(Manifest.permission.POST_NOTIFICATIONS)
                 }

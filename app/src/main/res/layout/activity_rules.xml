@@ -50,7 +50,7 @@
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
-                        android:text="No Real Photos\nUse your favorite movie/book/TV characters instead"
+                        android:text="No Real Photos\nUse the provided avatars instead"
                         android:textColor="@android:color/black"
                         android:textSize="14sp" />
                 </LinearLayout>

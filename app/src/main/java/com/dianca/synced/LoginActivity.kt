@@ -49,7 +49,7 @@ class LoginActivity : AppCompatActivity() {
 
     }
 
-    // ----------------- LANGUAGE SWITCH -------------------
+    //lang switch
     private fun setupLanguageSpinner() {
         val spinner = binding.spinnerLanguage
         val languages = resources.getStringArray(R.array.languages)
@@ -104,7 +104,7 @@ class LoginActivity : AppCompatActivity() {
         }
     }
 
-    // ----------------- LOGIN METHODS -------------------
+    //login methods
     private fun setupEmailLogin() {
         binding.btnLogin.setOnClickListener {
             val email = binding.etEmail.text.toString()
@@ -221,7 +221,7 @@ class LoginActivity : AppCompatActivity() {
         }
     }
 
-    // 🔥 New logic: check if questionnaire done
+    //check if questionnaire is completed
     private fun navigateAfterLogin() {
         val uid = auth.currentUser?.uid ?: return
         val db = FirebaseFirestore.getInstance()

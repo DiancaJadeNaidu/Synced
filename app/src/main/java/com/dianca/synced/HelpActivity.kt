@@ -22,7 +22,6 @@ class HelpActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_help)
 
-        // --- Init views ---
         inputEditText = findViewById(R.id.inputEditText)
         sendButton = findViewById(R.id.sendButton)
         quickHelp1 = findViewById(R.id.quickHelp1)
@@ -32,7 +31,7 @@ class HelpActivity : AppCompatActivity() {
         quickHelpContainer = findViewById(R.id.quickHelpContainer)
         bottomNav = findViewById(R.id.bottomNav)
 
-        // --- Bottom Nav ---
+        //bottom nav
         val bottomNav = findViewById<BottomNavigationView>(R.id.bottomNav)
         bottomNav.setOnItemSelectedListener { item ->
             when(item.itemId) {
@@ -45,13 +44,13 @@ class HelpActivity : AppCompatActivity() {
             true
         }
 
-        // --- Quick help options ---
+        //quick help options
         quickHelp1.setOnClickListener { showAnswer("intent") }
         quickHelp2.setOnClickListener { showAnswer("matching") }
         quickHelp3.setOnClickListener { showAnswer("report") }
         quickHelp4.setOnClickListener { showAnswer("privacy") }
 
-        // --- Send button ---
+        //send btns
         sendButton.setOnClickListener {
             val query = inputEditText.text.toString().trim()
             if (query.isNotEmpty()) {

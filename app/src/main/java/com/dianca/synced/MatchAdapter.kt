@@ -70,13 +70,13 @@ class MatchAdapter(
         holder.viewProfileButton.setOnClickListener { onClick(match) }
         holder.itemView.setOnClickListener { onClick(match) }
 
-        // ------------------ Combined Traits Button ------------------
+        //traits
         holder.traitsChip.setOnClickListener {
             val traits = calculateTraits(currentUser, match)
             showListDialog(holder.itemView, "Traits & Differences", traits)
         }
 
-        // ------------------ Zodiac Compatibility Button ------------------
+        //zodiac compatibility
         holder.zodiacChip.setOnClickListener {
             val (percent, desc) = getZodiacCompatibility(currentUser, match)
             showListDialog(holder.itemView, "Zodiac Compatibility", listOf("${percent}% compatible", desc))
@@ -85,7 +85,6 @@ class MatchAdapter(
 
     override fun getItemCount(): Int = matches.size
 
-    // ------------------ Helper Functions ------------------
     private fun calculateTraits(currentUser: MatchModel, match: MatchModel): List<String> {
         val traits = mutableListOf<String>()
 

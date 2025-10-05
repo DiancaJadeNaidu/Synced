@@ -163,7 +163,7 @@ class ProfileActivity : AppCompatActivity() {
     private fun updateIntent(newIntent: String) {
         val uid = auth.currentUser?.uid ?: return
 
-        // Normalize → first letter uppercase, rest lowercase
+        // Normalize - first letter uppercase, rest lowercase
         val formattedIntent = newIntent.lowercase().replaceFirstChar { it.uppercase() }
 
         db.collection("users").document(uid)
