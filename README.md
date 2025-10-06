@@ -178,11 +178,23 @@ Repo: https://github.com/DiancaJadeNaidu/Synced
 
 ## References
 
-Kotlin Documentation - (https://kotlinlang.org/docs/home.html)
+Google (2025) Android developers guide. Available at: https://developer.android.com/guide
+ (Accessed: 6 October 2025).
 
-Android Developers Guide - (https://developer.android.com/guide)
+Gradle (2025) Gradle user guide. Available at: https://docs.gradle.org/current/userguide/userguide.html
+ (Accessed: 6 October 2025).
 
-Gradle - (https://docs.gradle.org/current/userguide/userguide.html)
+JetBrains (2025) Kotlin documentation. Available at: https://kotlinlang.org/docs/home.html
+ (Accessed: 6 October 2025).
+
+Firebase (2025) Firebase documentation. Available at: https://firebase.google.com/docs
+ (Accessed: 6 October 2025).
+
+WhatsApp (2025) WhatsApp business platform: Cloud API documentation. Available at: https://developers.facebook.com/docs/whatsapp
+ (Accessed: 6 October 2025).
+
+Instagram (2025) Instagram graph API documentation. Available at: https://developers.facebook.com/docs/instagram-api
+ (Accessed: 6 October 2025).
 
 
 
