@@ -65,7 +65,6 @@ class TriviaActivity : AppCompatActivity() {
         bottomNav.setOnItemSelectedListener { item ->
             when (item.itemId) {
                 R.id.nav_home -> { startActivity(Intent(this, MainActivity::class.java)); true }
-                R.id.nav_messages -> { startActivity(Intent(this, SyncedFriendsActivity::class.java)); true }
                 R.id.nav_profile -> { startActivity(Intent(this, ProfileActivity::class.java)); true }
                 R.id.nav_settings -> { startActivity(Intent(this, SettingsActivity::class.java)); true }
                 R.id.nav_help -> { startActivity(Intent(this, HelpActivity::class.java)); true }

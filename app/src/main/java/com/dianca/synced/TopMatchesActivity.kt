@@ -85,10 +85,7 @@ class TopMatchesActivity : AppCompatActivity() {
                     startActivity(Intent(this, TopMatchesActivity::class.java))
                     true
                 }
-                R.id.nav_messages -> {
-                    startActivity(Intent(this, SyncedFriendsActivity::class.java))
-                    true
-                }
+
                 R.id.nav_profile -> {
                     startActivity(Intent(this, ProfileActivity::class.java))
                     true

@@ -63,10 +63,7 @@ class FriendGamesActivity : AppCompatActivity() {
                     startActivity(Intent(this, TopMatchesActivity::class.java))
                     true
                 }
-                R.id.nav_messages -> {
-                    startActivity(Intent(this, SyncedFriendsActivity::class.java))
-                    true
-                }
+
                 R.id.nav_geo -> {
                     startActivity(Intent(this, GeolocationActivity::class.java))
                     true

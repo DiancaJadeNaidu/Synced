@@ -4,15 +4,11 @@
         android:id="@+id/nav_home"
         android:icon="@drawable/ic_home"
         android:title="@string/home" />
-    <item
-        android:id="@+id/nav_messages"
-        android:icon="@drawable/ic_message"
-        android:title="@string/messages" />
 
     <item
         android:id="@+id/nav_geo"
-        android:title="Map"
-        android:icon="@drawable/ic_map" />
+        android:icon="@drawable/ic_map"
+        android:title="Map" />
 
     <item
         android:id="@+id/nav_profile"

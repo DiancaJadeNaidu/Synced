@@ -59,10 +59,7 @@ class TicTacToeActivity : AppCompatActivity() {
                     startActivity(Intent(this, MainActivity::class.java))
                     true
                 }
-                R.id.nav_messages -> {
-                    startActivity(Intent(this, SyncedFriendsActivity::class.java))
-                    true
-                }
+
                 R.id.nav_settings -> {
                     startActivity(Intent(this, SettingsActivity::class.java))
                     true
