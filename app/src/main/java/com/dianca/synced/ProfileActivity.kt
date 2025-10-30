@@ -4,10 +4,14 @@ import android.content.Intent
 import android.os.Bundle
 import android.widget.*
 import androidx.appcompat.app.AppCompatActivity
+import androidx.lifecycle.lifecycleScope
 import com.bumptech.glide.Glide
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import java.text.SimpleDateFormat
 import java.util.*
 
@@ -23,6 +27,7 @@ class ProfileActivity : AppCompatActivity() {
 
     private lateinit var db: FirebaseFirestore
     private lateinit var auth: FirebaseAuth
+    private lateinit var localDb: AppDatabase
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -53,6 +58,7 @@ class ProfileActivity : AppCompatActivity() {
 
         db = FirebaseFirestore.getInstance()
         auth = FirebaseAuth.getInstance()
+        localDb = AppDatabase.getInstance(this)
 
         loadUserProfile()
 
@@ -88,44 +94,56 @@ class ProfileActivity : AppCompatActivity() {
             return
         }
 
-        db.collection("users").document(uid).get()
-            .addOnSuccessListener { doc ->
-                if (doc.exists()) {
-                    val name = doc.getString("name") ?: ""
-                    val birthday = doc.getString("birthday") ?: ""
-                    val age = calculateAge(birthday)
-                    val intent = doc.getString("intent") ?: ""
-                    val bio = doc.getString("bio") ?: ""
-                    val gender = doc.getString("gender") ?: ""
-                    val continent = doc.getString("continent") ?: ""
-                    val country = doc.getString("country") ?: ""
-                    val location = if (continent.isNotEmpty() && country.isNotEmpty()) "$country, $continent" else ""
-                    val hobbies = (doc.get("hobbies") as? List<*>)?.joinToString(", ") ?: ""
+        val userDao = localDb.userDao()
 
-                    val imageUrl = doc.getString("profileImageUrl")
-                    val avatarId = doc.getLong("avatarId")?.toInt() ?: R.drawable.default_avatar_foreground
+        lifecycleScope.launch {
+            // Load cached user first
+            val cachedUser = withContext(Dispatchers.IO) { userDao.getUser(uid) }
+            if (cachedUser != null) displayUser(cachedUser)
 
-                    txtNameAge.text = if (name.isNotEmpty() && age > 0) "$name, $age" else name
-                    txtIntent.text = if (intent.isNotEmpty()) "Looking for: $intent" else ""
-                    txtGender.text = if (gender.isNotEmpty()) "Gender: $gender" else ""
-                    txtLocation.text = if (location.isNotEmpty()) "Location: $location" else ""
-                    txtHobbies.text = if (hobbies.isNotEmpty()) "Hobbies: $hobbies" else ""
+            // Fetch latest Firestore data if online
+            if (isOnline()) {
+                db.collection("users").document(uid).get()
+                    .addOnSuccessListener { doc ->
+                        if (doc.exists()) {
+                            val name = doc.getString("name") ?: ""
+                            val birthday = doc.getString("birthday") ?: ""
+                            val age = calculateAge(birthday)
+                            val intentText = doc.getString("intent") ?: ""
+                            val bio = doc.getString("bio") ?: ""
+                            val gender = doc.getString("gender") ?: ""
+                            val continent = doc.getString("continent") ?: ""
+                            val country = doc.getString("country") ?: ""
+                            val location = if (continent.isNotEmpty() && country.isNotEmpty()) "$country, $continent" else ""
+                            val hobbies = (doc.get("hobbies") as? List<*>)?.joinToString(", ") ?: ""
+                            val avatarId = doc.getLong("avatarId")?.toInt() ?: R.drawable.default_avatar_foreground
 
-                    if (!imageUrl.isNullOrEmpty()) {
-                        Glide.with(this).load(imageUrl).into(imgProfile)
-                    } else {
-                        imgProfile.setImageResource(avatarId)
+                            val user = UserEntity(
+                                uid, name, age, gender, location,
+                                "Looking for: $intentText • Hobbies: $hobbies", avatarId
+                            )
+
+                            // Update local DB
+                            lifecycleScope.launch(Dispatchers.IO) { userDao.insertUser(user) }
+                            displayUser(user)
+                        }
                     }
+                    .addOnFailureListener {
+                        Toast.makeText(this@ProfileActivity, "Failed to load profile", Toast.LENGTH_SHORT).show()
+                    }
+            } else {
+                Toast.makeText(this@ProfileActivity, "Offline: showing cached profile", Toast.LENGTH_SHORT).show()
+            }
+        }
+    }
 
-                } else {
-                    Toast.makeText(this, "Please complete your profile", Toast.LENGTH_SHORT).show()
-                    startActivity(Intent(this, QuestionnaireActivity::class.java))
-                    finish()
-                }
-            }
-            .addOnFailureListener { e ->
-                Toast.makeText(this, "Error loading profile: ${e.message}", Toast.LENGTH_LONG).show()
-            }
+    private fun displayUser(user: UserEntity) {
+        txtNameAge.text = "${user.name}, ${user.age}"
+        txtIntent.text = user.bio
+        txtGender.text = "Gender: ${user.gender}"
+        txtLocation.text = "Location: ${user.location}"
+        txtHobbies.text = user.bio
+        imgProfile.setImageResource(user.avatarId)
     }
 
     private fun calculateAge(birthdayStr: String): Int {
@@ -162,18 +180,37 @@ class ProfileActivity : AppCompatActivity() {
 
     private fun updateIntent(newIntent: String) {
         val uid = auth.currentUser?.uid ?: return
-
-        // Normalize - first letter uppercase, rest lowercase
         val formattedIntent = newIntent.lowercase().replaceFirstChar { it.uppercase() }
 
-        db.collection("users").document(uid)
-            .update("intent", formattedIntent)
-            .addOnSuccessListener {
-                Toast.makeText(this, "Intent updated!", Toast.LENGTH_SHORT).show()
-                txtIntent.text = "Looking for: $formattedIntent"
+        val userDao = localDb.userDao()
+        lifecycleScope.launch {
+            // Update local DB immediately
+            val cachedUser = withContext(Dispatchers.IO) { userDao.getUser(uid) }
+            if (cachedUser != null) {
+                cachedUser.bio = "Looking for: $formattedIntent"
+                withContext(Dispatchers.IO) { userDao.insertUser(cachedUser) }
             }
-            .addOnFailureListener { e ->
-                Toast.makeText(this, "Failed to update: ${e.message}", Toast.LENGTH_SHORT).show()
+
+            // Try Firestore update
+            if (isOnline()) {
+                db.collection("users").document(uid)
+                    .update("intent", formattedIntent)
+                    .addOnSuccessListener {
+                        Toast.makeText(this@ProfileActivity, "Intent updated!", Toast.LENGTH_SHORT).show()
+                        txtIntent.text = "Looking for: $formattedIntent"
+                    }
+                    .addOnFailureListener { e ->
+                        Toast.makeText(this@ProfileActivity, "Failed to update: ${e.message}", Toast.LENGTH_SHORT).show()
+                    }
+            } else {
+                Toast.makeText(this@ProfileActivity, "Offline: intent saved locally, will sync later", Toast.LENGTH_SHORT).show()
             }
+        }
+    }
+
+    private fun isOnline(): Boolean {
+        val cm = getSystemService(CONNECTIVITY_SERVICE) as android.net.ConnectivityManager
+        val network = cm.activeNetworkInfo
+        return network != null && network.isConnected
     }
 }
