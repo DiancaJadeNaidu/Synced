@@ -1,123 +1,202 @@
 package com.dianca.synced
 
 import android.Manifest
+import android.content.Intent
 import android.content.pm.PackageManager
 import android.os.Bundle
 import android.widget.Switch
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
-import com.google.android.gms.location.FusedLocationProviderClient
-import com.google.android.gms.location.LocationServices
+import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.database.*
+import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.firestore.QuerySnapshot
 import org.osmdroid.config.Configuration
-import org.osmdroid.tileprovider.tilesource.TileSourceFactory
 import org.osmdroid.util.GeoPoint
 import org.osmdroid.views.MapView
 import org.osmdroid.views.overlay.Marker
+import org.osmdroid.views.overlay.compass.CompassOverlay
+import org.osmdroid.views.overlay.compass.InternalCompassOrientationProvider
+import org.osmdroid.views.overlay.mylocation.GpsMyLocationProvider
+import org.osmdroid.views.overlay.mylocation.MyLocationNewOverlay
 
 class GeoLocationActivity : AppCompatActivity() {
 
     private lateinit var map: MapView
-    private lateinit var switchShareLocation: Switch
-    private lateinit var fusedLocationClient: FusedLocationProviderClient
-    private lateinit var dbRef: DatabaseReference
-    private val userId = FirebaseAuth.getInstance().currentUser?.uid ?: "unknown"
+    private lateinit var locationSwitch: Switch
+    private lateinit var firestore: FirebaseFirestore
+    private lateinit var auth: FirebaseAuth
+    private lateinit var locationOverlay: MyLocationNewOverlay
+    private var myMarker: Marker? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        Configuration.getInstance().load(this, getSharedPreferences("osm_prefs", MODE_PRIVATE))
         setContentView(R.layout.activity_geolocation)
 
-        // Initialize map and Firebase
-        Configuration.getInstance().userAgentValue = packageName
+        // Init views
         map = findViewById(R.id.osmMap)
-        map.setTileSource(TileSourceFactory.MAPNIK)
-        map.setMultiTouchControls(true)
+        locationSwitch = findViewById(R.id.switchShareLocation)
+        firestore = FirebaseFirestore.getInstance()
+        auth = FirebaseAuth.getInstance()
 
-        switchShareLocation = findViewById(R.id.switchShareLocation)
-        fusedLocationClient = LocationServices.getFusedLocationProviderClient(this)
-        dbRef = FirebaseDatabase.getInstance().getReference("UserLocations")
+        setupMap()
 
-        requestLocationPermission()
+        // Location sharing switch
+        locationSwitch.setOnCheckedChangeListener { _, isChecked ->
+            if (isChecked) startSharingLocation() else stopSharingLocation()
+        }
 
-        // Load other users' locations in realtime
         listenForOtherUsers()
 
-        switchShareLocation.setOnCheckedChangeListener { _, isChecked ->
-            if (isChecked) shareLocation() else stopSharing()
+        // Bottom navigation setup
+        val bottomNav = findViewById<BottomNavigationView>(R.id.bottomNav)
+        bottomNav.setOnItemSelectedListener { item ->
+            when (item.itemId) {
+                R.id.nav_home -> {
+                    startActivity(Intent(this, TopMatchesActivity::class.java))
+                    true
+                }
+
+                R.id.nav_geo -> {
+                    // Already here
+                    true
+                }
+
+                R.id.nav_profile -> {
+                    startActivity(Intent(this, ProfileActivity::class.java))
+                    true
+                }
+
+                R.id.nav_settings -> {
+                    startActivity(Intent(this, SettingsActivity::class.java))
+                    true
+                }
+
+                R.id.nav_help -> {
+                    startActivity(Intent(this, HelpActivity::class.java))
+                    true
+                }
+
+                else -> false
+            }
         }
     }
 
-    private fun requestLocationPermission() {
-        if (ContextCompat.checkSelfPermission(
-                this,
-                Manifest.permission.ACCESS_FINE_LOCATION
-            ) != PackageManager.PERMISSION_GRANTED
+    private fun setupMap() {
+        map.setMultiTouchControls(true)
+        map.controller.setZoom(15.0)
+
+        locationOverlay = MyLocationNewOverlay(GpsMyLocationProvider(this), map)
+        locationOverlay.enableMyLocation()
+        map.overlays.add(locationOverlay)
+
+        val compassOverlay = CompassOverlay(this, InternalCompassOrientationProvider(this), map)
+        compassOverlay.enableCompass()
+        map.overlays.add(compassOverlay)
+    }
+
+    private fun startSharingLocation() {
+        if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION)
+            != PackageManager.PERMISSION_GRANTED
         ) {
             ActivityCompat.requestPermissions(
                 this,
                 arrayOf(Manifest.permission.ACCESS_FINE_LOCATION),
-                100
+                1
             )
+            return
         }
-    }
 
-    private fun shareLocation() {
-        if (ActivityCompat.checkSelfPermission(
-                this,
-                Manifest.permission.ACCESS_FINE_LOCATION
-            ) != PackageManager.PERMISSION_GRANTED
-        ) return
+        Toast.makeText(this, "Location sharing enabled", Toast.LENGTH_SHORT).show()
 
-        fusedLocationClient.lastLocation.addOnSuccessListener { location ->
-            if (location != null) {
-                val lat = location.latitude
-                val lon = location.longitude
-                val geoPoint = GeoPoint(lat, lon)
+        val locationProvider = GpsMyLocationProvider(this)
+        locationProvider.startLocationProvider { location, _ ->
+            location?.let {
+                val uid = auth.currentUser?.uid ?: return@let
+                val userName = auth.currentUser?.displayName ?: auth.currentUser?.email ?: uid
 
-                // Center map on user
-                map.controller.setZoom(15.0)
+                val data = hashMapOf(
+                    "latitude" to it.latitude,
+                    "longitude" to it.longitude,
+                    "name" to userName
+                )
+                firestore.collection("locations").document(uid).set(data)
+
+                // Center map on user's location
+                val geoPoint = GeoPoint(it.latitude, it.longitude)
                 map.controller.setCenter(geoPoint)
 
-                // Add marker for user
-                val marker = Marker(map)
-                marker.position = geoPoint
-                marker.title = "You"
-                map.overlays.add(marker)
-
-                // Upload to Firebase
-                val userLoc = mapOf("latitude" to lat, "longitude" to lon)
-                dbRef.child(userId).setValue(userLoc)
+                // Add or update my marker
+                if (myMarker == null) {
+                    myMarker = Marker(map)
+                    myMarker!!.setAnchor(Marker.ANCHOR_CENTER, Marker.ANCHOR_BOTTOM)
+                    map.overlays.add(myMarker)
+                }
+                myMarker!!.position = geoPoint
+                myMarker!!.title = userName
+                map.invalidate()
             }
         }
     }
 
-    private fun stopSharing() {
-        dbRef.child(userId).removeValue()
+    private fun stopSharingLocation() {
+        val uid = auth.currentUser?.uid ?: return
+        firestore.collection("locations").document(uid).delete()
+        Toast.makeText(this, "Location sharing disabled", Toast.LENGTH_SHORT).show()
+
+        // Remove your marker from map
+        myMarker?.let {
+            map.overlays.remove(it)
+            myMarker = null
+            map.invalidate()
+        }
     }
 
     private fun listenForOtherUsers() {
-        dbRef.addValueEventListener(object : ValueEventListener {
-            override fun onDataChange(snapshot: DataSnapshot) {
-                map.overlays.clear()
-
-                for (child in snapshot.children) {
-                    val uid = child.key ?: continue
-                    val lat = child.child("latitude").getValue(Double::class.java) ?: continue
-                    val lon = child.child("longitude").getValue(Double::class.java) ?: continue
-
-                    val marker = Marker(map)
-                    marker.position = GeoPoint(lat, lon)
-                    marker.title = if (uid == userId) "You" else "User $uid"
-                    map.overlays.add(marker)
+        firestore.collection("locations")
+            .addSnapshotListener { snapshot, error ->
+                if (error != null) {
+                    Toast.makeText(this, "Error loading map data", Toast.LENGTH_SHORT).show()
+                    return@addSnapshotListener
                 }
-
-                map.invalidate()
+                snapshot?.let { updateMapMarkers(it) }
             }
+    }
 
-            override fun onCancelled(error: DatabaseError) {}
-        })
+    private fun updateMapMarkers(snapshot: QuerySnapshot) {
+        // Keep only the current user's location overlay (MyLocationNewOverlay)
+        val overlaysToKeep = map.overlays.filterIsInstance<MyLocationNewOverlay>().toMutableList()
+
+        // Clear all overlays and add only the location overlays
+        map.overlays.clear()
+        map.overlays.addAll(overlaysToKeep)
+
+        // Add the current user's marker if it exists
+        myMarker?.let { map.overlays.add(it) }
+
+        // Add markers for other users
+        for (doc in snapshot.documents) {
+            val uid = doc.id
+            if (uid == auth.currentUser?.uid) continue // skip self
+
+            val lat = doc.getDouble("latitude") ?: continue
+            val lon = doc.getDouble("longitude") ?: continue
+            val name = doc.getString("name") ?: continue
+
+            // Only add marker if the user is actively sharing
+            if (name.isBlank()) continue
+
+            val marker = Marker(map)
+            marker.position = GeoPoint(lat, lon)
+            marker.title = name
+            marker.setAnchor(Marker.ANCHOR_CENTER, Marker.ANCHOR_BOTTOM)
+            map.overlays.add(marker)
+        }
+
+        map.invalidate()
     }
 
     override fun onResume() {

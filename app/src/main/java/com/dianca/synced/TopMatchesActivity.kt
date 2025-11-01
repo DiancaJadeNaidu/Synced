@@ -85,6 +85,10 @@ class TopMatchesActivity : AppCompatActivity() {
                     startActivity(Intent(this, TopMatchesActivity::class.java))
                     true
                 }
+                R.id.nav_geo -> {
+                    startActivity(Intent(this, GeoLocationActivity::class.java))
+                    true
+                }
 
                 R.id.nav_profile -> {
                     startActivity(Intent(this, ProfileActivity::class.java))
