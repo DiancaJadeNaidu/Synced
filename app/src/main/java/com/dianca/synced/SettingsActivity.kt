@@ -6,9 +6,15 @@ import android.widget.*
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
+import androidx.lifecycle.lifecycleScope
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
+import com.dianca.synced.AppDatabase
+import com.dianca.synced.BlockedUser
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import java.util.*
 
 class SettingsActivity : AppCompatActivity() {
@@ -27,8 +33,9 @@ class SettingsActivity : AppCompatActivity() {
 
     private lateinit var auth: FirebaseAuth
     private lateinit var db: FirebaseFirestore
+    private lateinit var dbRoom: AppDatabase
 
-    private val blockedUsers = mutableSetOf<String>()  // keep track in session
+    private val blockedUsers = mutableSetOf<String>()  // Keep track in session
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -59,12 +66,16 @@ class SettingsActivity : AppCompatActivity() {
 
         auth = FirebaseAuth.getInstance()
         db = FirebaseFirestore.getInstance()
+        dbRoom = AppDatabase.getInstance(this)
 
         setupLanguageSpinner()
         setupNotifications()
         setupCommunityActions()
         setupLogout()
         setupDeleteAccount()
+
+        // Sync offline blocked users to Firebase when online
+        syncBlockedUsers()
     }
 
     // -----------------------
@@ -128,7 +139,7 @@ class SettingsActivity : AppCompatActivity() {
     private fun setupCommunityActions() {
         btnViewRules.setOnClickListener {
             val intent = Intent(this, RulesActivity::class.java)
-            intent.putExtra("fromSettings", true) // flag to indicate rules opened from settings
+            intent.putExtra("fromSettings", true)
             startActivity(intent)
         }
 
@@ -172,14 +183,27 @@ class SettingsActivity : AppCompatActivity() {
 
     private fun blockUser(userId: String) {
         val currentUid = auth.currentUser?.uid ?: return
-        blockedUsers.add(userId)
 
-        db.collection("users").document(currentUid)
-            .collection("synced").document(userId)
-            .delete()
-            .addOnSuccessListener {
-                Toast.makeText(this, "User blocked and removed from friends", Toast.LENGTH_SHORT).show()
+        lifecycleScope.launch {
+            // 1️⃣ Save locally (offline)
+            withContext(Dispatchers.IO) {
+                dbRoom.blockedUserDao().insert(BlockedUser(userId))
             }
+
+            blockedUsers.add(userId)
+            Toast.makeText(this@SettingsActivity, "User blocked locally ✅", Toast.LENGTH_SHORT).show()
+
+            // 2️⃣ Sync with Firebase
+            db.collection("users").document(currentUid)
+                .collection("synced").document(userId)
+                .delete()
+                .addOnSuccessListener {
+                    Toast.makeText(this@SettingsActivity, "User synced with server ✅", Toast.LENGTH_SHORT).show()
+                }
+                .addOnFailureListener {
+                    Toast.makeText(this@SettingsActivity, "Will sync later when online", Toast.LENGTH_SHORT).show()
+                }
+        }
     }
 
     private fun reportUser(userId: String) {
@@ -222,6 +246,22 @@ class SettingsActivity : AppCompatActivity() {
                 }
                 .setNegativeButton("Cancel", null)
                 .show()
+        }
+    }
+
+    // -----------------------
+    // Sync offline blocked users to Firebase
+    // -----------------------
+    private fun syncBlockedUsers() {
+        lifecycleScope.launch(Dispatchers.IO) {
+            val blockedList = dbRoom.blockedUserDao().getAll()
+            val currentUid = auth.currentUser?.uid ?: return@launch
+
+            blockedList.forEach { user ->
+                db.collection("users").document(currentUid)
+                    .collection("synced").document(user.userId)
+                    .delete()
+            }
         }
     }
 }
