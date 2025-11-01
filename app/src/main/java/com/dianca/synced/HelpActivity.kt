@@ -36,7 +36,7 @@ class HelpActivity : AppCompatActivity() {
         bottomNav.setOnItemSelectedListener { item ->
             when(item.itemId) {
                 R.id.nav_home -> startActivity(Intent(this, TopMatchesActivity::class.java))
-                R.id.nav_geo -> startActivity(Intent(this, GeolocationActivity::class.java))
+                R.id.nav_geo -> startActivity(Intent(this, GeoLocationActivity::class.java))
                 R.id.nav_profile -> startActivity(Intent(this, ProfileActivity::class.java))
                 R.id.nav_settings -> startActivity(Intent(this, SettingsActivity::class.java))
                 R.id.nav_help -> {}

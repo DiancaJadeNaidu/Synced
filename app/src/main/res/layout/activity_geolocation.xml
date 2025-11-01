@@ -1,80 +1,68 @@
-<?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<!-- Geolocation screen (OpenStreetMap version) -->
+<ScrollView
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    xmlns:app="http://schemas.android.com/apk/res-auto">
+    android:background="@drawable/gradient_bg"
+    android:padding="16dp">
 
-    <!-- ScrollView with gradient background and padding -->
-    <ScrollView
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:background="@drawable/gradient_bg"
-        android:padding="16dp">
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:gravity="center"
+        android:padding="12dp">
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:background="@drawable/rounded_white_card"
             android:orientation="vertical"
-            android:gravity="center"
-            android:padding="12dp">
+            android:padding="30dp">
 
-            <!-- White card container -->
+            <TextView
+                android:id="@+id/tvGeoTitle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Geolocation Map 📍"
+                android:textColor="@android:color/black"
+                android:textSize="30sp"
+                android:textStyle="bold"
+                android:layout_gravity="center"
+                android:paddingBottom="16dp" />
+
+            <!-- OpenStreetMap View -->
+            <org.osmdroid.views.MapView
+                android:id="@+id/osmMap"
+                android:layout_width="match_parent"
+                android:layout_height="400dp"
+                android:layout_marginTop="20dp"
+                tools:ignore="MissingClass" />
+
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:background="@drawable/rounded_white_card"
-                android:orientation="vertical"
-                android:padding="30dp">
+                android:layout_marginTop="20dp"
+                android:orientation="horizontal"
+                android:gravity="center_vertical">
 
-                <!-- Title -->
                 <TextView
-                    android:id="@+id/tvGeoTitle"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="Share Location"
+                    android:textColor="@android:color/black"
+                    android:textSize="18sp" />
+
+                <Switch
+                    android:id="@+id/switchShareLocation"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_gravity="center"
-                    android:paddingBottom="16dp"
-                    android:text="Geolocation Map 📍"
-                    android:textColor="@android:color/black"
-                    android:textSize="30sp"
-                    android:textStyle="bold" />
-
-                <!-- Google Map Fragment (Essential for geolocation) -->
-                <fragment
-                    android:id="@+id/map"
-                    android:name="com.google.android.gms.maps.SupportMapFragment"
-                    android:layout_width="match_parent"
-                    android:layout_height="400dp"
-                    android:layout_marginTop="20dp"
-                    tools:context=".GeoLocationActivity" />
-
-                <!-- Share Location Switch -->
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="20dp"
-                    android:orientation="horizontal"
-                    android:gravity="center_vertical">
-
-                    <TextView
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:text="Share Location"
-                        android:textColor="@android:color/black"
-                        android:textSize="18sp" />
-
-                    <Switch
-                        android:id="@+id/switchShareLocation"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:checked="false"
-                        android:textOff="Off"
-                        android:textOn="On" />
-                </LinearLayout>
-
+                    android:textOff="Off"
+                    android:textOn="On" />
             </LinearLayout>
-        </LinearLayout>
-    </ScrollView>
 
-</FrameLayout>
+        </LinearLayout>
+    </LinearLayout>
+</ScrollView>

@@ -8,7 +8,7 @@ import android.os.Bundle
 import android.widget.*
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.lifecycleScope
-import com.dianca.synced.data.local.*
+import com.dianca.synced.*
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
@@ -45,7 +45,7 @@ class ViewProfileActivity : AppCompatActivity() {
         bottomNav.setOnItemSelectedListener { item ->
             when (item.itemId) {
                 R.id.nav_home -> startActivity(Intent(this, TopMatchesActivity::class.java))
-                R.id.nav_geo -> startActivity(Intent(this, GeolocationActivity::class.java))
+                R.id.nav_geo -> startActivity(Intent(this, GeoLocationActivity::class.java))
                 R.id.nav_profile -> startActivity(Intent(this, ProfileActivity::class.java))
                 R.id.nav_settings -> startActivity(Intent(this, SettingsActivity::class.java))
                 R.id.nav_help -> startActivity(Intent(this, HelpActivity::class.java))

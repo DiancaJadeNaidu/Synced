@@ -65,7 +65,7 @@ class FriendGamesActivity : AppCompatActivity() {
                 }
 
                 R.id.nav_geo -> {
-                    startActivity(Intent(this, GeolocationActivity::class.java))
+                    startActivity(Intent(this, GeoLocationActivity::class.java))
                     true
                 }
                 R.id.nav_profile -> {

@@ -3,6 +3,9 @@
     xmlns:tools="http://schemas.android.com/tools">
 
     <uses-permission android:name="android.permission.INTERNET"/>
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION"/>
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
 
     <application
         android:allowBackup="true"
@@ -14,7 +17,8 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.Synced"
         tools:targetApi="34"
-        tools:ignore="ExtraText">
+        tools:ignore="ExtraText"
+        android:usesCleartextTraffic="true">
 
         <!-- Main launcher -->
         <activity
@@ -51,7 +55,7 @@
         <activity android:name=".NumberGuessActivity" />
 
         <activity android:name=".HelpActivity" />
-        <activity android:name=".GeolocationActivity" />
+        <activity android:name=".GeoLocationActivity" />
 
     </application>
 </manifest>

@@ -46,7 +46,7 @@ class SettingsActivity : AppCompatActivity() {
         bottomNav.setOnItemSelectedListener { item ->
             when (item.itemId) {
                 R.id.nav_home -> startActivity(Intent(this, TopMatchesActivity::class.java))
-                R.id.nav_geo -> startActivity(Intent(this, GeolocationActivity::class.java))
+                R.id.nav_geo -> startActivity(Intent(this, GeoLocationActivity::class.java))
                 R.id.nav_profile -> startActivity(Intent(this, ProfileActivity::class.java))
                 R.id.nav_settings -> {} // Already here
                 R.id.nav_help -> startActivity(Intent(this, HelpActivity::class.java))
@@ -74,13 +74,11 @@ class SettingsActivity : AppCompatActivity() {
         setupLogout()
         setupDeleteAccount()
 
-        // Sync offline blocked users to Firebase when online
+        //sync offline blocked users to Firebase when online
         syncBlockedUsers()
     }
 
-    // -----------------------
     // Language
-    // -----------------------
     private fun setupLanguageSpinner() {
         val languages = listOf("English", "Zulu", "French")
         spinnerLanguage.adapter = ArrayAdapter(
@@ -108,9 +106,7 @@ class SettingsActivity : AppCompatActivity() {
         }
     }
 
-    // -----------------------
-    // Notifications
-    // -----------------------
+    //notifications
     private fun setupNotifications() {
         val prefs = getSharedPreferences("notifPrefs", MODE_PRIVATE)
         switchMessages.isChecked = prefs.getBoolean("messages", true)
@@ -133,9 +129,7 @@ class SettingsActivity : AppCompatActivity() {
         switchFriendActivity.setOnCheckedChangeListener(listener)
     }
 
-    // -----------------------
-    // Community Actions
-    // -----------------------
+    //community actions
     private fun setupCommunityActions() {
         btnViewRules.setOnClickListener {
             val intent = Intent(this, RulesActivity::class.java)
@@ -185,7 +179,7 @@ class SettingsActivity : AppCompatActivity() {
         val currentUid = auth.currentUser?.uid ?: return
 
         lifecycleScope.launch {
-            // 1️⃣ Save locally (offline)
+            //Save locally (offline)
             withContext(Dispatchers.IO) {
                 dbRoom.blockedUserDao().insert(BlockedUser(userId))
             }
@@ -193,7 +187,7 @@ class SettingsActivity : AppCompatActivity() {
             blockedUsers.add(userId)
             Toast.makeText(this@SettingsActivity, "User blocked locally ✅", Toast.LENGTH_SHORT).show()
 
-            // 2️⃣ Sync with Firebase
+            //Sync with Firebase
             db.collection("users").document(currentUid)
                 .collection("synced").document(userId)
                 .delete()
@@ -217,9 +211,7 @@ class SettingsActivity : AppCompatActivity() {
         }
     }
 
-    // -----------------------
     // Logout / Delete Account
-    // -----------------------
     private fun setupLogout() {
         btnLogout.setOnClickListener {
             auth.signOut()
@@ -249,9 +241,7 @@ class SettingsActivity : AppCompatActivity() {
         }
     }
 
-    // -----------------------
     // Sync offline blocked users to Firebase
-    // -----------------------
     private fun syncBlockedUsers() {
         lifecycleScope.launch(Dispatchers.IO) {
             val blockedList = dbRoom.blockedUserDao().getAll()

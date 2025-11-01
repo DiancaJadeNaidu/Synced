@@ -99,5 +99,14 @@ dependencies {
     implementation ("com.squareup.okhttp3:logging-interceptor:4.10.0")
     implementation ("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.7.3")
 
+    // OpenStreetMap (osmdroid)
+    implementation("org.osmdroid:osmdroid-android:6.1.14")
+
+// Firebase Realtime Database (for live user locations)
+    implementation("com.google.firebase:firebase-database-ktx")
+
+// Location services
+    implementation("com.google.android.gms:play-services-location:21.0.1")
+
 
 }
