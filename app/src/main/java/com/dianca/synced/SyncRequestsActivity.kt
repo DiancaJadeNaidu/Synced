@@ -23,6 +23,7 @@ class SyncRequestsActivity : AppCompatActivity() {
     private val requestsList = mutableListOf<SyncRequest>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
+        NotificationHelper.createNotificationChannel(this)
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_requests)
 
@@ -64,20 +65,30 @@ class SyncRequestsActivity : AppCompatActivity() {
             .addSnapshotListener { snapshot, error ->
                 if (error != null || snapshot == null) return@addSnapshotListener
 
-                requestsList.clear()
+                val existingIds = requestsList.map { it.id }.toSet() // track current requests
                 for (doc in snapshot.documents) {
-                    val request = doc.toObject<SyncRequest>() ?: continue
-                    request.id = doc.id
+                    if (!existingIds.contains(doc.id)) { // new request detected
+                        val request = doc.toObject<SyncRequest>() ?: continue
+                        request.id = doc.id
 
-                    db.collection("users").document(request.senderId).get()
-                        .addOnSuccessListener { userDoc ->
-                            request.senderName = userDoc.getString("name") ?: "Unknown"
-                            request.senderImage = userDoc.getString("profileImage") ?: ""
-                            request.senderAge = calculateAge(userDoc.getString("birthday") ?: "")
+                        db.collection("users").document(request.senderId).get()
+                            .addOnSuccessListener { userDoc ->
+                                request.senderName = userDoc.getString("name") ?: "Unknown"
+                                request.senderImage = userDoc.getString("profileImage") ?: ""
+                                request.senderAge = calculateAge(userDoc.getString("birthday") ?: "")
 
-                            requestsList.add(request)
-                            adapter.notifyDataSetChanged()
-                        }
+                                requestsList.add(request)
+                                adapter.notifyDataSetChanged()
+
+                                // Show notification for new request
+                                NotificationHelper.showNotification(
+                                    this,
+                                    "New Sync Request",
+                                    "${request.senderName} sent you a request!",
+                                    doc.id.hashCode()
+                                )
+                            }
+                    }
                 }
             }
     }
