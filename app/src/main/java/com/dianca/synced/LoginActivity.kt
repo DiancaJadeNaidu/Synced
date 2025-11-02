@@ -177,7 +177,7 @@ class LoginActivity : AppCompatActivity() {
                 override fun onAuthenticationSucceeded(result: BiometricPrompt.AuthenticationResult) {
                     super.onAuthenticationSucceeded(result)
                     Toast.makeText(this@LoginActivity, "Biometric auth successful", Toast.LENGTH_SHORT).show()
-                    Log.d(TAG, "Biometric succeeded")
+
                     tryAutoLoginWithBiometric()
                 }
 
@@ -272,7 +272,6 @@ class LoginActivity : AppCompatActivity() {
 
     private fun navigateAfterLogin() {
         val uid = auth.currentUser?.uid
-        Log.d(TAG, "navigateAfterLogin uid = $uid")
         if (uid == null) {
             Toast.makeText(this, "User not logged in!", Toast.LENGTH_SHORT).show()
             return

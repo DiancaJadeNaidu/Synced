@@ -1,0 +1,43 @@
+type User @table {
+  username: String!
+  email: String!
+  passwordHash: String!
+  createdAt: Timestamp!
+  lookingFor: String!
+  bio: String
+  firstName: String
+  lastName: String
+  dateOfBirth: Date
+  gender: String
+  location: String
+  profilePictureUrl: String
+  lastOnlineAt: Timestamp
+  privacySettings: String
+}
+
+type Interest @table {
+  name: String!
+  createdAt: Timestamp!
+  description: String
+  category: String
+}
+
+type UserInterest @table(key: ["user", "interest"]) {
+  user: User!
+  interest: Interest!
+  isKeyInterest: Boolean
+}
+
+type Match @table(key: ["user1", "user2"]) {
+  user1: User!
+  user2: User!
+  matchedAt: Timestamp!
+}
+
+type Message @table {
+  match: Match!
+  sender: User!
+  content: String!
+  sentAt: Timestamp!
+  readAt: Timestamp
+}
