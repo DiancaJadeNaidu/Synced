@@ -159,7 +159,7 @@ class ViewProfileActivity : AppCompatActivity() {
 
         lifecycleScope.launch {
             requestDao.insertRequest(request)
-            Toast.makeText(this@ViewProfileActivity, "Message queued 📩 (will sync when online)", Toast.LENGTH_SHORT).show()
+            Toast.makeText(this@ViewProfileActivity, "Request Sent", Toast.LENGTH_SHORT).show()
             if (isOnline()) syncRequests()
         }
     }
