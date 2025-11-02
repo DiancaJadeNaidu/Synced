@@ -56,6 +56,7 @@ class SyncRequestsActivity : AppCompatActivity() {
 
         rvRequests.adapter = adapter
         loadRequests()
+        listenToSentRequests()
     }
 
     private fun loadRequests() {
@@ -92,6 +93,30 @@ class SyncRequestsActivity : AppCompatActivity() {
                 }
             }
     }
+    private fun listenToSentRequests() {
+        db.collection("requests")
+            .whereEqualTo("senderId", uid)
+            .addSnapshotListener { snapshot, error ->
+                if (error != null || snapshot == null) return@addSnapshotListener
+
+                for (doc in snapshot.documents) {
+                    val request = doc.toObject<SyncRequest>() ?: continue
+                    request.id = doc.id
+
+                    if (request.status == "accepted" || request.status == "declined") {
+                        db.collection("users").document(request.receiverId).get()
+                            .addOnSuccessListener { userDoc ->
+                                val receiverName = userDoc.getString("name") ?: "User"
+                                val title = "Request ${request.status.capitalize()}"
+                                val message = "$receiverName has ${request.status} your sync request."
+                                val notifId = (System.currentTimeMillis() % 10000).toInt()
+                                NotificationHelper.showNotification(this, title, message, notifId)
+                            }
+                    }
+                }
+            }
+    }
+
 
     private fun calculateAge(birthday: String): Int {
         return try {
