@@ -111,7 +111,7 @@ class LoginActivity : AppCompatActivity() {
             val password = binding.etPassword.text.toString()
 
             if (email.isEmpty() || password.isEmpty()) {
-                Toast.makeText(this, getString(R.string.todo), Toast.LENGTH_SHORT).show()
+                Toast.makeText(this, getString(R.string.email), Toast.LENGTH_SHORT).show()
                 return@setOnClickListener
             }
 
