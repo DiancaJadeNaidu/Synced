@@ -1,9 +1,13 @@
 package com.dianca.synced
 
+import android.content.Context
 import android.content.Intent
 import android.os.Build
 import android.os.Bundle
+import android.util.Log
 import android.view.View
+import androidx.security.crypto.EncryptedSharedPreferences
+import androidx.security.crypto.MasterKey
 import android.widget.AdapterView
 import android.widget.ArrayAdapter
 import android.widget.Toast
@@ -31,6 +35,8 @@ class LoginActivity : AppCompatActivity() {
     private lateinit var biometricPrompt: BiometricPrompt
     private lateinit var promptInfo: BiometricPrompt.PromptInfo
 
+    private val TAG = "LoginActivity"
+
     private var isFirstLanguageSelection = true
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -47,9 +53,10 @@ class LoginActivity : AppCompatActivity() {
         setupLanguageSpinner()
         setupForgotPassword()
 
+        // Attempt auto-login if credentials exist
+        tryAutoLoginWithBiometric()
     }
 
-    //lang switch
     private fun setupLanguageSpinner() {
         val spinner = binding.spinnerLanguage
         val languages = resources.getStringArray(R.array.languages)
@@ -59,16 +66,12 @@ class LoginActivity : AppCompatActivity() {
 
         spinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
             override fun onItemSelected(
-                parent: AdapterView<*>?,
-                view: View?,
-                position: Int,
-                id: Long
+                parent: AdapterView<*>?, view: View?, position: Int, id: Long
             ) {
                 if (isFirstLanguageSelection) {
                     isFirstLanguageSelection = false
                     return
                 }
-
                 val langCode = when (position) {
                     0 -> "en"
                     1 -> "af"
@@ -77,7 +80,6 @@ class LoginActivity : AppCompatActivity() {
                 }
                 updateLanguage(langCode)
             }
-
             override fun onNothingSelected(parent: AdapterView<*>?) {}
         }
     }
@@ -85,7 +87,6 @@ class LoginActivity : AppCompatActivity() {
     private fun updateLanguage(lang: String) {
         val locale = Locale(lang)
         Locale.setDefault(locale)
-
         val config = resources.configuration
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1) {
             config.setLocale(locale)
@@ -94,17 +95,9 @@ class LoginActivity : AppCompatActivity() {
             config.locale = locale
         }
         resources.updateConfiguration(config, resources.displayMetrics)
-
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
-            recreate()
-        } else {
-            val intent = intent
-            finish()
-            startActivity(intent)
-        }
+        recreate()
     }
 
-    //login methods
     private fun setupEmailLogin() {
         binding.btnLogin.setOnClickListener {
             val email = binding.etEmail.text.toString()
@@ -118,6 +111,7 @@ class LoginActivity : AppCompatActivity() {
             auth.signInWithEmailAndPassword(email, password)
                 .addOnCompleteListener(this) { task ->
                     if (task.isSuccessful) {
+                        saveCredentials(email, password)
                         navigateAfterLogin()
                     } else {
                         Toast.makeText(
@@ -141,7 +135,6 @@ class LoginActivity : AppCompatActivity() {
             .requestIdToken(getString(R.string.default_web_client_id))
             .requestEmail()
             .build()
-
         googleSignInClient = GoogleSignIn.getClient(this, gso)
 
         val googleSignInLauncher =
@@ -167,6 +160,8 @@ class LoginActivity : AppCompatActivity() {
         auth.signInWithCredential(credential)
             .addOnCompleteListener(this) { task ->
                 if (task.isSuccessful) {
+                    // Save a flag for biometric auto-login
+                    saveCredentials("google_user", idToken)
                     navigateAfterLogin()
                 } else {
                     Toast.makeText(this, "Google authentication failed", Toast.LENGTH_SHORT).show()
@@ -174,21 +169,26 @@ class LoginActivity : AppCompatActivity() {
             }
     }
 
+    // --- Biometric Setup ---
     private fun setupBiometricLogin() {
         executor = ContextCompat.getMainExecutor(this)
-        biometricPrompt = BiometricPrompt(
-            this,
-            executor,
+        biometricPrompt = BiometricPrompt(this, executor,
             object : BiometricPrompt.AuthenticationCallback() {
                 override fun onAuthenticationSucceeded(result: BiometricPrompt.AuthenticationResult) {
                     super.onAuthenticationSucceeded(result)
-                    Toast.makeText(applicationContext, "Biometric auth successful", Toast.LENGTH_SHORT).show()
-                    navigateAfterLogin()
+                    Toast.makeText(this@LoginActivity, "Biometric auth successful", Toast.LENGTH_SHORT).show()
+                    Log.d(TAG, "Biometric succeeded")
+                    tryAutoLoginWithBiometric()
                 }
 
                 override fun onAuthenticationFailed() {
                     super.onAuthenticationFailed()
-                    Toast.makeText(applicationContext, "Biometric auth failed", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(this@LoginActivity, "Biometric auth failed", Toast.LENGTH_SHORT).show()
+                }
+
+                override fun onAuthenticationError(errorCode: Int, errString: CharSequence) {
+                    super.onAuthenticationError(errorCode, errString)
+                    Toast.makeText(this@LoginActivity, "Biometric error: $errString", Toast.LENGTH_SHORT).show()
                 }
             })
 
@@ -201,15 +201,64 @@ class LoginActivity : AppCompatActivity() {
         binding.ivFingerprint.setOnClickListener { biometricPrompt.authenticate(promptInfo) }
         binding.ivFace.setOnClickListener { biometricPrompt.authenticate(promptInfo) }
     }
+
+    private fun saveCredentials(email: String, passwordOrToken: String) {
+        val masterKey = MasterKey.Builder(applicationContext)
+            .setKeyScheme(MasterKey.KeyScheme.AES256_GCM)
+            .build()
+        val sharedPrefs = EncryptedSharedPreferences.create(
+            applicationContext,
+            "biometric_prefs",
+            masterKey,
+            EncryptedSharedPreferences.PrefKeyEncryptionScheme.AES256_SIV,
+            EncryptedSharedPreferences.PrefValueEncryptionScheme.AES256_GCM
+        )
+        sharedPrefs.edit().apply {
+            putString("email", email)
+            putString("password", passwordOrToken)
+            apply()
+        }
+    }
+
+    private fun tryAutoLoginWithBiometric() {
+        val masterKey = MasterKey.Builder(applicationContext)
+            .setKeyScheme(MasterKey.KeyScheme.AES256_GCM)
+            .build()
+        val sharedPrefs = EncryptedSharedPreferences.create(
+            applicationContext,
+            "biometric_prefs",
+            masterKey,
+            EncryptedSharedPreferences.PrefKeyEncryptionScheme.AES256_SIV,
+            EncryptedSharedPreferences.PrefValueEncryptionScheme.AES256_GCM
+        )
+
+        val email = sharedPrefs.getString("email", null)
+        val passwordOrToken = sharedPrefs.getString("password", null)
+
+        if (!email.isNullOrEmpty() && !passwordOrToken.isNullOrEmpty()) {
+            // Firebase login
+            if (email == "google_user") {
+                val credential = GoogleAuthProvider.getCredential(passwordOrToken, null)
+                auth.signInWithCredential(credential)
+                    .addOnCompleteListener { task ->
+                        if (task.isSuccessful) navigateAfterLogin()
+                    }
+            } else {
+                auth.signInWithEmailAndPassword(email, passwordOrToken)
+                    .addOnCompleteListener { task ->
+                        if (task.isSuccessful) navigateAfterLogin()
+                    }
+            }
+        }
+    }
+
     private fun setupForgotPassword() {
         binding.tvForgotPassword.setOnClickListener {
             val email = binding.etEmail.text.toString()
-
             if (email.isEmpty()) {
                 Toast.makeText(this, "Please enter your email first", Toast.LENGTH_SHORT).show()
                 return@setOnClickListener
             }
-
             auth.sendPasswordResetEmail(email)
                 .addOnCompleteListener { task ->
                     if (task.isSuccessful) {
@@ -221,21 +270,20 @@ class LoginActivity : AppCompatActivity() {
         }
     }
 
-    //check if questionnaire is completed
     private fun navigateAfterLogin() {
-        val uid = auth.currentUser?.uid ?: return
+        val uid = auth.currentUser?.uid
+        Log.d(TAG, "navigateAfterLogin uid = $uid")
+        if (uid == null) {
+            Toast.makeText(this, "User not logged in!", Toast.LENGTH_SHORT).show()
+            return
+        }
         val db = FirebaseFirestore.getInstance()
-
         db.collection("users").document(uid).get().addOnSuccessListener { snapshot ->
             if (snapshot.exists()) {
                 val hasDetails = snapshot.getString("birthday")?.isNotEmpty() == true &&
                         snapshot.getString("gender")?.isNotEmpty() == true
-
-                if (hasDetails) {
-                    startActivity(Intent(this, TopMatchesActivity::class.java))
-                } else {
-                    startActivity(Intent(this, QuestionnaireActivity::class.java))
-                }
+                val targetActivity = if (hasDetails) TopMatchesActivity::class.java else QuestionnaireActivity::class.java
+                startActivity(Intent(this, targetActivity))
                 finish()
             } else {
                 startActivity(Intent(this, QuestionnaireActivity::class.java))

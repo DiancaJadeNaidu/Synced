@@ -87,7 +87,7 @@ class GeoLocationActivity : AppCompatActivity() {
 
     private fun setupMap() {
         map.setMultiTouchControls(true)
-        map.controller.setZoom(15.0)
+        map.controller.setZoom(9.0)
 
         locationOverlay = MyLocationNewOverlay(GpsMyLocationProvider(this), map)
         locationOverlay.enableMyLocation()
