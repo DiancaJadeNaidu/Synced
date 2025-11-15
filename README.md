@@ -1,108 +1,221 @@
 # Synced
 
-**Synced** is a Kotlin-based mobile application that helps people connect and build meaningful relationships.  
+**Synced** is a Kotlin-based mobile application designed to help people build meaningful friendships and relationships through compatibility-based matching, interactive features, and real-time engagement.
 
-[![Kotlin](https://img.shields.io/badge/Kotlin-1.9-blue)](https://kotlinlang.org/)  
-[![License: MIT](https://img.shields.io/badge/License-MIT-green)](LICENSE)  
+![Kotlin](https://img.shields.io/badge/Kotlin-1.9-blue)
+![License: MIT](https://img.shields.io/badge/License-MIT-green)
+
+**Status:** The app is currently in **Closed Testing**.
 
 ---
 
-## Group Members  
+## Group Members
 
-- Member 1: Dianca Jade Naidu  
-- Member 2: Riva Jangda  
-- Member 3: Keira Meth  
-- Member 4: Azande Mnguni  
-- Member 5: Asanda Dimba  
+- Dianca Jade Naidu  
+- Riva Jangda  
+- Keira Meth  
+- Azande Mnguni  
+- Asanda Dimba  
 
 ---
 
 ## Table of Contents
 
-- [Overview](#overview)  
-- [Features](#features)  
-- [Architecture / Components](#architecture--components)  
-- [Getting Started](#getting-started)  
-  - [Requirements](#requirements)  
-  - [Installation](#installation)  
-  - [Running the App](#running-the-app)  
-- [Usage](#usage)  
-- [Configuration](#configuration)  
+- [Overview](#overview)
+- [Features](#features)
+- [Additional POE Features](#additional-poe-features)
+- [Architecture / Components](#architecture--components)
+- [Getting Started](#getting-started)
+- [Usage](#usage)
+- [Configuration](#configuration)
 - [Contributing](#contributing)
-- [Contact](#contact) 
-- [License](#license)  
-- [References](#references)  
+- [Contact](#contact)
+- [References](#references)
 
 ---
 
-## Overview  
+## Overview
 
-**Synced** is a Kotlin-based mobile application that helps people connect and build meaningful relationships.  
-The app matches users based on a questionnaire that evaluates compatibility, allowing them to decide whether they are looking for a friendship or a romantic relationship.  
+**Synced** is a Kotlin Android application that connects users based on compatibility across personality, interests, and lifestyle traits.  
+Users can choose their intent (friendship or romantic), play games together, and interact using real-time features.
 
-Beyond just matching, Synced makes the experience engaging by including interactive in-app games that users can play together, helping break the ice and strengthen connections.
+The app integrates with a **.NET REST API** for profiles, scoring, safety features, notifications, and multiplayer interactions.
 
-The goal is to create a safe, fun, and personalized environment for meeting new people, making friends, or exploring relationships.
-
-The app communicates with the Synced API (a RESTful API built in .NET) for managing user profiles, compatibility scores, leaderboards for games, and multiplayer competition tracking.
+The project is fully prepared for **Google Play Store deployment** and is currently running in **Closed Testing**.
 
 ---
 
-## Features  
+## Features
 
-**USER FEATURE 1**
-*Questionnaire & Matching* -
+### **USER FEATURE 1 — Questionnaire & Matching**
+- Users complete a personality and lifestyle questionnaire.
+- Compatibility scores are calculated automatically.
+- Matches update dynamically as preferences change.
 
-On sign-up, users complete a compatibility questionnaire covering personality traits, interests, and lifestyle choices.
+### **USER FEATURE 2 — Flexible Intent**
+Users choose:
+- **Friendship**, or  
+- **Romantic relationships**
 
-This questionnaire data is securely stored in Firebase, which powers the matchmaking engine.
+Intent can be switched anytime, and matching adjusts accordingly.
 
-The app uses this data to suggest potential matches with high compatibility scores, improving the chance of meaningful connections.
-
-Matching is dynamic and updated as users change their preferences, ensuring results always stay relevant.
-
-**USER FEATURE 2**
-*Flexible Intent* - 
-
-Users can choose whether they are seeking friendship or a romantic connection.
-
-Since people often change their minds over time, Synced allows them to switch intent seamlessly.
-
-If a user selects friendship, they will only be shown others who also chose friendship; the same applies to romance.
-
-This keeps matches aligned with intent, helping avoid mismatched expectations.
-
-**USER FEATURE 3**
-*Interactive In-App Games* - 
-
-To help break the ice, Synced includes multiplayer mini-games (such as trivia, memory match, or simple challenges).
-
-These games are designed for quick, fun engagement, making conversations feel natural instead of forced.
-
-Game scores, player stats, and leaderboards are managed through the Synced API, creating a competitive but social layer to user interactions.
-
-Users can see how they rank against their matches, sparking fun conversations and giving them more reasons to stay connected.
+### **USER FEATURE 3 — Multiplayer Games**
+- Fun in-app multiplayer games (trivia, memory match, etc.)
+- Leaderboards and scoring fully synced with the backend.
 
 ---
 
-## Architecture / Components  
+## Additional POE Features
 
-- **Kotlin (100%)** — Core language for app development  
-- **Gradle** — Build automation and dependency management  
-- **App Module** — Android UI, questionnaire, and games  
-- **Sync Module** — Compatibility engine and matching logic  
-- **CI/CD** — GitHub Actions workflows for automated builds and checks  
+### **1. Geolocation Matching + Ghost Mode**
+Using Android’s fused location services, Synced introduces:
+
+**Location-Based Matching**
+- Find users nearby  
+- Distance-based match sorting  
+
+**Ghost Mode**
+- Hides real-time location  
+- Masks distance metadata  
+- Shows only compatibility-based matches  
+
+This gives users full control over privacy.
 
 ---
 
-## Getting Started  
+### **2. Blocking & Reporting (Safety & Moderation)**
+Synced includes a complete safety and moderation system:
 
-### Requirements  
+**Blocking**
+- Prevents interaction  
+- Removes users from visibility lists  
+- Disables messaging, requests, and game invites  
 
-- [Android Studio](https://developer.android.com/studio)  
+**Reporting**
+- Allows users to report inappropriate behaviour  
+- Reports are forwarded to the API’s moderation endpoint  
+
+This ensures a safe and secure user environment.
+
+---
+
+### **3. Multi-Language Support (EN / Afrikaans / isiZulu)**
+All screens and UI components support:
+
+- 🇬🇧 English  
+- 🇿🇦 Afrikaans  
+- 🇿🇦 isiZulu  
+
+Using Android resource localization for all layouts, dialogs, and strings.
+
+---
+
+### **4. Offline Sync Mode (RoomDB)**
+Synced works seamlessly offline using **RoomDB**.
+
+Offline-supported features include:
+- User profile  
+- User settings  
+- Sending connection requests  
+- Accepting/declining requests  
+
+Data automatically syncs when internet returns.
+
+---
+
+### **5. Real-Time Notifications**
+Using Firebase Cloud Messaging (FCM), users receive live notifications:
+
+- When receiving a new request  
+- When a request is accepted or declined  
+- When receiving game invites  
+- Even when the app is closed  
+
+Notifications work both in-app and background.
+
+---
+
+### **6. Automated Testing (GitHub Actions CI/CD)**
+Synced includes automated test pipelines:
+
+- Unit Testing  
+- UI Testing  
+- Lint Checks  
+- Static Code Analysis  
+- Build & APK Validation  
+- API Endpoint Testing  
+
+
+---
+
+### **7. Biometric Login (Fingerprint & Face Unlock)**
+Synced supports secure login using:
+
+- Fingerprint authentication  
+- Face unlock (device-supported)  
+- Secure fallback authentication  
+
+Credentials use encrypted storage with Android Biometrics.
+
+---
+
+### **8. Google Play Store Preparation**
+Prepared for Play Store with:
+
+- Signed release build  
+- Privacy policy  
+- Optimized icons & adaptive icons  
+- Content rating and metadata  
+- Play Store screenshots  
+- Closed Testing rollout configuration  
+
+---
+
+### **9. API Improvements (Latest Version)**
+As part of the final update:
+
+- Fixed core authentication endpoints  
+- Added new endpoints for blocking, reporting, games, and geolocation  
+- Improved pagination & filtering  
+- Optimized response models  
+- Fixed intermittent server errors  
+- Enhanced error handling and validations  
+
+---
+
+### **10. UI Component Enhancements**
+Final version includes:
+
+- Updated layout spacing & alignment  
+- Improved accessibility (font scaling, contrast)  
+- Cleaner animations & transitions  
+- Better error states & loading indicators  
+- Standardized color palette and typography  
+
+---
+
+## Architecture / Components
+
+- **Kotlin** — Primary language  
+- **RoomDB** — Offline storage & sync  
+- **Firebase Cloud Messaging** — Push notifications  
+- **Android BiometricPrompt** — Secure login  
+- **.NET REST API** — Backend service  
+- **Gradle** — Build system  
+- **GitHub Actions** — CI/CD automation  
+
+---
+
+## Getting Started
+
+### Requirements
+
+- Android Studio  
 - Kotlin 1.9+  
 - Gradle 8+  
 - Android SDK 24+  
+
+---
 
 ### Installation  
 
